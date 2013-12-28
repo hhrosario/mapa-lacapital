@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="ico/favicon.png">
+
+    <title>Mapa</title>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <link href="vendor/bootswatch/bootstrap.min.css" rel="stylesheet">
+    <link href="css/sticky-footer.css" rel="stylesheet">
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+    <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet-src.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.underscore.min.js"></script>
+
+    <script type="text/javascript" src="colorbrewer.js"></script>
+    <script type="text/javascript" src="leaflet.points-layer.js"></script>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+    <![endif]-->
+
+    <style type="text/css">
+
+      body {
+        background: #ddd url(images/grid.png);
+        height: 100%;
+      }
+
+      html {
+        height: 100%;
+      }
+
+      .main-padder {
+        padding: 30px;
+        background: white;
+      }
+
+      .container.with-navbar {
+        padding-top: 45px;
+      }
+
+      #footer {
+        background: #444 url(images/noisy_net.png);
+      }
+
+      @media (min-width: 768px) {
+        .navbar-nav.navbar-right:last-child { /* Overriding default bootstrap style */
+          margin-right: 0px;
+        }
+      }
+
+      @media (max-width: 479px) {
+        .main-padder {
+          padding: 10px;
+          background: white;
+        }
+      }
+
+      #map { 
+        height: 500px;
+        width: 100%;
+      }
+
+      #sidebar { 
+        height: 500px;
+
+        overflow-y: scroll;
+        width: 100%;
+        color: #333;
+      }
+
+      #sidebar-padder {
+        /*padding: 20px;*/
+      }
+
+      svg {
+        font: 10px sans-serif;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #ccc;
+        shape-rendering: crispEdges;
+      }
+
+      #splatter { display: none }
+
+      .circle { visibility: hidden; }
+      .circle.selected { visibility: visible; }
+
+      .filtros div { margin-bottom: 5px; }
+
+      .filtros button:hover {
+        color: #333;
+      }
+
+      .filtros button.active {
+        background: rgb(41, 82, 122);
+        color: white;
+      }
+
+    </style>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div id="wrap">
+
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Secciones</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Homicidios 2013</a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Inicio</a></li>
+              <li><a href="#about">Acerca de</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+
+      <div class="container with-navbar">
+
+        <div class="main-padder">
+
+          <div class="row">
+            <div class="col-md-2">
+              <div class="filtros">
+                <h5>Distritos</h5>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Sur</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Norte</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Oeste</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Centro</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Noroeste</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Sudoeste</button></div>
+                <h5>Comisarías</h5>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 1</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 2</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 3</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 4</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 5</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 6</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 7</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 8</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 9</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 10</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 11</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 12</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 13</button></div>
+                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 14</button></div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div>
+                <h3><span>16 de Junio al 23 de Noviembre</span> <small>-</small> 123 <small>homicidios</small> <small>-</small> 55% <small>del total</small></h3>
+              </div>
+              <div id='map' data-source="mapa.json"></div>
+             <div id="timeline"></div>
+            </div>
+            <div class="col-md-2">
+              <div id="sidebar">
+                  <div id="sidebar-padder"></div>
+              </div>
+            </div>
+          </div>
+
+          <script type="text/html" id="sideTemplate">
+              <h2><%- victimas %></h2>
+              <h3><%- fecha %></h3>
+              <h4><%- direccion %></h4>
+              <p><%- resumen %></p>
+          </script>
+          
+          
+
+          <script type="text/javascript">
+           (function () {
+                var extent, scale, 
+                    classes = 9,
+                    reverse = false,
+                    scheme = colorbrewer["YlOrRd"][classes], // No le estamos dando bola a esto, podríamos volarlo
+                    container = L.DomUtil.get('map'),
+                    map = L.map(container).setView([-32.9598, -60.6423], 10);
+
+                var tpl = document.getElementById("sideTemplate").text;
+
+                L.tileLayer('http://{s}.tiles.mapbox.com/v3/hhrosario.map-wygexzoy/{z}/{x}/{y}.png', {
+                  attribution: 'OpenStreetMaps',
+                  maxZoom: 17
+                }).addTo(map);
+
+                d3.json(container.dataset.source, function(collection) {
+                    L.pointsLayer(collection, {
+                      radius: 10, // podríamos usar un callback para que tenga un radio relativo a algo, por ahora lo prefiero fijo
+                      applyStyle: circle_style
+                    }).addTo(map);
+                    var chart = timeseries_chart(scheme)
+                            .x(get_time).xLabel("Fecha")
+                            .y(get_quantity).yLabel("Casos")
+                            .brushmove(on_brush);
+                    d3.select("#timeline").datum(collection.features).call(chart);
+                });
+
+                function on_brush(brush) {
+                  var s = brush.extent();
+                  d3.selectAll(".circle").classed("selected", function (d) {
+                      var time = get_time(d);
+                      return s[0] <= time && time <= s[1];
+                  });
+                }
+
+                function get_time(d) {
+                  //console.log(d3.time.format.iso.parse(d.properties.fecha));
+                  return d3.time.format.iso.parse(d.properties.fecha);
+                }
+
+                function get_quantity(d) {
+                  return 69; // Porno numérico arbitrario, en realidad acá podriamos contar la cantidad de casos en una fecha
+                }
+
+                function circle_style(circles) {
+                  if (!(extent && scale)) {
+                      extent = d3.extent(circles.data(), function (d) { return d.properties.depth; });
+                      scale = d3.scale.log()
+                              .domain(reverse ? extent.reverse() : extent)
+                              .range(d3.range(classes));
+                  }
+                  circles.attr('opacity', 0.7)
+                    .attr('stroke', "#0077ee")
+                    .attr('stroke-width', 2)
+                    .attr('cursor', 'pointer')
+                    .attr('fill', "#0077dd");
+
+                  circles.on('click', function (d, i) {
+                    L.DomEvent.stopPropagation(d3.event);
+                    var data = {
+                        fecha: d3.time.format.iso.parse(d.properties.fecha),
+                        direccion: d.properties.direccion,
+                        victimas: d.properties.victimas,
+                        resumen: d.properties.resumen,
+                    };
+                    document.getElementById('sidebar-padder').innerHTML = _.template(tpl, data);
+                  });
+
+                };
+
+              function timeseries_chart(color) {
+                  var margin = { top: 20, right: 20, bottom: 20, left: 20 },
+                      width = 680,
+                      //width = 960 - margin.left - margin.right,
+                      height = 80;
+
+                  var x = d3.time.scale(),
+                      y = d3.scale.linear(),
+                      x_label = "X", y_label = "Y",
+                      brush = d3.svg.brush().x(x).on("brush", _brushmove);
+
+                  var get_x = no_op,
+                      get_y = no_op;
+
+                  function translateMonth() {
+
+                  }
+
+                  function timeseries(selection) {
+                      selection.each(function (d) {
+                          x.range([0, width]);
+                          y.range([height, 0]);
+
+                          var series = d3.select(this).append("svg").attr("id", "mapa-timeseries")
+                                  .attr("width", width + margin.left + margin.right)
+                                  .attr("height", height + margin.top + margin.bottom)
+                                  .append("g").attr("id", "date-brush")
+                                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                          var x_axis = series.append("g")
+                                  .attr("class", "x axis")
+                                  .attr("transform", "translate(0," + height + ")")
+                                  .style("stroke", "#0033aa")
+                                  ;
+
+                          var y_axis = series.append("g")
+                                  .attr("class", "y axis");
+
+                          x_axis.append("text")
+                              .attr("class", "label")
+                              .attr("x", width)
+                              .attr("y", 30)
+                              .style("text-anchor", "end")
+                              .style("stroke", "white")
+                              .text(x_label);
+
+                          y_axis.append("text")
+                              .attr("class", "label")
+                              .attr("transform", "rotate(-90)")
+                              .attr("y", -40)
+                              .attr("dy", ".71em")
+                              .style("text-anchor", "end")
+                              .style("stroke", "white")
+                              .text(y_label);
+
+                          series.append("clipPath")
+                              .attr("id", "clip")
+                              .append("rect")
+                              .attr("width", width - 1)
+                              .attr("height", height - .25)
+                              .attr("transform", "translate(1,0)");
+
+                          series.append("g")
+                                  .attr("class", "brush")
+                                  .call(brush)
+                                  .selectAll("rect")
+                                  .attr("height", height)
+                                  .style("stroke-width", 10) // Borde groso para draggear
+                                  .style("stroke", '#0022aa')
+                                  .style("fill", '#0077dd')
+                                  .attr("opacity", 0.3);
+
+                          x.domain(d3.extent(d, get_x));
+                          x_axis.call(d3.svg.axis().scale(x).orient("bottom"));
+
+                          y.domain(d3.extent(d, get_y));
+                          y_axis.call(d3.svg.axis().scale(y).orient("left"));
+
+                          series.append("g").attr("class", "timeseries")
+                              .attr("clip-path", "url(#clip)")
+                              .selectAll("circle")
+                              .data(d).enter()
+                              .append("circle") // Deberían ser barras, más altas si hay más de un caso en ese día... veremos.
+                              .style("stroke", '#0022aa')
+                              .style("stroke-width", .5)
+                              .style("fill", '#0077dd')
+                              .attr("opacity", .8)
+                              .attr("r", 10)
+                              .attr("transform", function (d) {
+                                  return "translate(" + x(get_x(d)) + "," + y(get_y(d)) + ")";
+                              });
+                      });
+                  }
+
+                  timeseries.x = function (accessor) {
+                      if (!arguments.length) return get_x;
+                      get_x = accessor;
+                      return timeseries;
+                  };
+
+                  timeseries.y = function (accessor) {
+                      if (!arguments.length) return get_y;
+                      get_y = accessor;
+                      return timeseries;
+                  };
+
+                  timeseries.xLabel = function (label) {
+                      if (!arguments.length) return x_label;
+                      x_label = label;
+                      return timeseries;
+                  }
+
+                  timeseries.yLabel = function (label) {
+                      if (!arguments.length) return y_label;
+                      y_label = label;
+                      return timeseries;
+                  }
+
+                  timeseries.brushmove = function (cb) {
+                      if (!arguments.length) return brushmove;
+                      brushmove = cb;
+                      return timeseries;
+                  };
+
+                  function _brushmove() {
+                      brushmove.call(null, brush);
+                  }
+
+                  function no_op() {}
+
+                  return timeseries;
+              }
+
+            }());
+          </script>
+
+
+        </div> <!-- main-padder -->
+      </div> <!-- container -->
+    </div> <!-- wrap -->
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted"><a target="_blank" href="http://www.hackshackers.com" class="btn-link footer-link">Hacks/Hackers Rosario</a></p>
+      </div>
+    </div>
+
+  </body>
+</html>
