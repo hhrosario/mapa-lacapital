@@ -15,14 +15,18 @@
     <link href="vendor/bootswatch/bootstrap.min.css" rel="stylesheet">
     <link href="css/sticky-footer.css" rel="stylesheet">
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
     
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <script src="vendor/momentjs/moment-with-langs.min.js"></script>
+
+
     
     <script src="http://d3js.org/d3.v3.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.underscore.min.js"></script>
 
+    <script src="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
@@ -52,6 +56,10 @@
 
       #footer {
         background: #444 url(images/noisy_net.png);
+      }
+
+      #scroll-filtros #comisarias-togglers {
+        height: 400px;
       }
 
       .mapa-y-filtros {
@@ -224,46 +232,48 @@
             <div class="col-md-2">
               <div class="filtros">
                 <h5 class="titulo-color">Filtros <small>- Click para activar</small></h5>
-                <h6>Distritos</h6>
-                <div id="distritos-togglers">
-                  <div><button data-id="7" type="button" class="boton-filtro">Distrito Sur</button></div>
-                  <div><button data-id="4" type="button" class="boton-filtro">Distrito Norte</button></div>
-                  <div><button data-id="6" type="button" class="boton-filtro">Distrito Oeste</button></div>
-                  <div><button data-id="3" type="button" class="boton-filtro">Distrito Centro</button></div>
-                  <div><button data-id="5" type="button" class="boton-filtro">Distrito Noroeste</button></div>
-                  <div><button data-id="8" type="button" class="boton-filtro">Distrito Sudoeste</button></div>
-                </div>
-                <h6>Comisarías</h6>
-                <div id="comisarias-togglers">
-                  <div><button data-id="28" type="button" class="boton-filtro">Comisaría 1</button></div>
-                  <div><button data-id="20" type="button" class="boton-filtro">Comisaría 2</button></div>
-                  <div><button data-id="13" type="button" class="boton-filtro">Sub Comisaría 2</button></div>
-                  <div><button data-id="31" type="button" class="boton-filtro">Comisaría 3</button></div>
-                  <div><button data-id="29" type="button" class="boton-filtro">Comisaría 4</button></div>
-                  <div><button data-id="15" type="button" class="boton-filtro">Comisaría 5</button></div>
-                  <div><button data-id="8" type="button" class="boton-filtro">Comisaría 6</button></div>
-                  <div><button data-id="30" type="button" class="boton-filtro">Comisaría 7</button></div>
-                  <div><button data-id="10" type="button" class="boton-filtro">Comisaría 8</button></div>
-                  <div><button data-id="23" type="button" class="boton-filtro">Comisaría 10</button></div>
-                  <div><button data-id="14" type="button" class="boton-filtro">Comisaría 11</button></div>
-                  <div><button data-id="6" type="button" class="boton-filtro">Comisaría 12</button></div>
-                  <div><button data-id="3" type="button" class="boton-filtro">Comisaría 13</button></div>
-                  <div><button data-id="5" type="button" class="boton-filtro">Comisaría 14</button></div>
-                  <div><button data-id="16" type="button" class="boton-filtro">Comisaría 15</button></div>
-                  <div><button data-id="21" type="button" class="boton-filtro">Comisaría 16</button></div>
-                  <div><button data-id="24" type="button" class="boton-filtro">Comisaría 17</button></div>
-                  <div><button data-id="7" type="button" class="boton-filtro">Comisaría 18</button></div>
-                  <div><button data-id="4" type="button" class="boton-filtro">Comisaría 19</button></div>
-                  <div><button data-id="11" type="button" class="boton-filtro">Sub Comisaría 19</button></div>
-                  <div><button data-id="18" type="button" class="boton-filtro">Comisaría 20</button></div>
-                  <div><button data-id="22" type="button" class="boton-filtro">Sub Comisaría 20</button></div>
-                  <div><button data-id="12" type="button" class="boton-filtro">Comisaría 21</button></div>
-                  <div><button data-id="17" type="button" class="boton-filtro">Sub Comisaría 21</button></div>
-                  <div><button data-id="25" type="button" class="boton-filtro">Sub Comisaría 22</button></div>
-                  <div><button data-id="19" type="button" class="boton-filtro">Sub Comisaría 24</button></div>
-                  <div><button data-id="26" type="button" class="boton-filtro">Comisaría 30</button></div>
-                  <div><button data-id="27" type="button" class="boton-filtro">Comisaría 32</button></div>
-                  <div><button data-id="9" type="button" class="boton-filtro">Comisaría 33</button></div>
+                <div id="scroll-filtros">
+                  <h6>Distritos</h6>
+                  <div id="distritos-togglers">
+                    <div><button data-id="7" type="button" class="boton-filtro">Distrito Sur</button></div>
+                    <div><button data-id="4" type="button" class="boton-filtro">Distrito Norte</button></div>
+                    <div><button data-id="6" type="button" class="boton-filtro">Distrito Oeste</button></div>
+                    <div><button data-id="3" type="button" class="boton-filtro">Distrito Centro</button></div>
+                    <div><button data-id="5" type="button" class="boton-filtro">Distrito Noroeste</button></div>
+                    <div><button data-id="8" type="button" class="boton-filtro">Distrito Sudoeste</button></div>
+                  </div>
+                  <h6>Comisarías</h6>
+                  <div id="comisarias-togglers">
+                    <div><button data-id="28" type="button" class="boton-filtro">Comisaría 1</button></div>
+                    <div><button data-id="20" type="button" class="boton-filtro">Comisaría 2</button></div>
+                    <div><button data-id="13" type="button" class="boton-filtro">Sub Comisaría 2</button></div>
+                    <div><button data-id="31" type="button" class="boton-filtro">Comisaría 3</button></div>
+                    <div><button data-id="29" type="button" class="boton-filtro">Comisaría 4</button></div>
+                    <div><button data-id="15" type="button" class="boton-filtro">Comisaría 5</button></div>
+                    <div><button data-id="8" type="button" class="boton-filtro">Comisaría 6</button></div>
+                    <div><button data-id="30" type="button" class="boton-filtro">Comisaría 7</button></div>
+                    <div><button data-id="10" type="button" class="boton-filtro">Comisaría 8</button></div>
+                    <div><button data-id="23" type="button" class="boton-filtro">Comisaría 10</button></div>
+                    <div><button data-id="14" type="button" class="boton-filtro">Comisaría 11</button></div>
+                    <div><button data-id="6" type="button" class="boton-filtro">Comisaría 12</button></div>
+                    <div><button data-id="3" type="button" class="boton-filtro">Comisaría 13</button></div>
+                    <div><button data-id="5" type="button" class="boton-filtro">Comisaría 14</button></div>
+                    <div><button data-id="16" type="button" class="boton-filtro">Comisaría 15</button></div>
+                    <div><button data-id="21" type="button" class="boton-filtro">Comisaría 16</button></div>
+                    <div><button data-id="24" type="button" class="boton-filtro">Comisaría 17</button></div>
+                    <div><button data-id="7" type="button" class="boton-filtro">Comisaría 18</button></div>
+                    <div><button data-id="4" type="button" class="boton-filtro">Comisaría 19</button></div>
+                    <div><button data-id="11" type="button" class="boton-filtro">Sub Comisaría 19</button></div>
+                    <div><button data-id="18" type="button" class="boton-filtro">Comisaría 20</button></div>
+                    <div><button data-id="22" type="button" class="boton-filtro">Sub Comisaría 20</button></div>
+                    <div><button data-id="12" type="button" class="boton-filtro">Comisaría 21</button></div>
+                    <div><button data-id="17" type="button" class="boton-filtro">Sub Comisaría 21</button></div>
+                    <div><button data-id="25" type="button" class="boton-filtro">Sub Comisaría 22</button></div>
+                    <div><button data-id="19" type="button" class="boton-filtro">Sub Comisaría 24</button></div>
+                    <div><button data-id="26" type="button" class="boton-filtro">Comisaría 30</button></div>
+                    <div><button data-id="27" type="button" class="boton-filtro">Comisaría 32</button></div>
+                    <div><button data-id="9" type="button" class="boton-filtro">Comisaría 33</button></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -272,12 +282,12 @@
               <h5 class="titulo-color">Mapa <small>- Hacé click en los puntos para más detalles.</small></h5>
 
               <div>
-                <h4><span id="filtros-fechadesde">16 de Junio</span> <small>al</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small>-</small> <span id="cantidad-puntos"></span> <small>homicidios</small> <small>-</small> 55% <small>del total</small></h4>
+                <h4><span id="filtros-fechadesde">16 de Junio</span> <small>al</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small>-</small> <span id="cantidad-puntos"></span> <small>homicidios</small> <small>-</small> <span id="porcentaje">55</span>% <small>del total</small></h4>
                 <h5 id="textoFiltros"></h5>
               </div>
               <div id='map' data-source="mapa.json"></div>
              
-              <h5 class="titulo-color">Línea de Tiempo <small>- Seleccioná un área en la línea del tiempo para filtrar por fecha.</small></h5>
+              <h5 class="titulo-color">Línea de Tiempo <small>- Seleccioná un área "pintando" en la línea del tiempo para filtrar por fecha, o arrastrando los extremos grises.</small></h5>
               
               <div id="timeline"></div>
 
@@ -302,6 +312,7 @@
 
             moment.lang("es");
             var mapaHomicidios = {};
+            var TOTAL_PUNTOS = 212; //hardcodeado por ahora
 
             mapaHomicidios.brush = null;
             mapaHomicidios.cantidadPuntos = 0;
@@ -321,6 +332,7 @@
               $("#filtro-comisarias").remove(); 
               $("#textoFiltros").append(spanComisarias);
               $("#cantidad-puntos").html(mapaHomicidios.cantidadPuntos);
+              $("#porcentaje").html(Math.floor((mapaHomicidios.cantidadPuntos / TOTAL_PUNTOS) * 100));
             };
 
             mapaHomicidios.obtenerFechaPunto = function(d) {
@@ -606,6 +618,11 @@
                       x_label = "X", y_label = "Y";
                   mapaHomicidios.brush = d3.svg.brush().x(x).on("brush", _brushmove);
 
+                  mapaHomicidios.brush.extent([0, width]);
+                  svg.select(".brush").call(mapaHomicidios.brush);
+                  mapaHomicidios.mostrarPuntosFiltrados();
+                  mapaHomicidios.actualizarTextoFiltros();
+
                   var get_x = no_op,
                       get_y = no_op;
 
@@ -736,6 +753,10 @@
 
               $("#cerrar-sidebar").on("click", function () {
                 $("#sidebar").fadeOut();
+              });
+
+              $("#comisarias-togglers").mCustomScrollbar({
+                theme: "dark-thick"
               });
 
             };
