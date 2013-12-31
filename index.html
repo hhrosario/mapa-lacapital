@@ -18,16 +18,14 @@
     
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     
-    <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet-src.js"></script>
     <script src="http://d3js.org/d3.v3.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.underscore.min.js"></script>
 
-    <script type="text/javascript" src="colorbrewer.js"></script>
-    <script type="text/javascript" src="leaflet.points-layer.js"></script>
 
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
     <![endif]-->
 
     <style type="text/css">
@@ -110,6 +108,14 @@
         color: white;
       }
 
+      .leaflet-zoom-hide circle {
+        visibility: hidden;
+      }
+
+      .leaflet-zoom-hide circle.selected {
+        visibility: visible;
+      }
+
     </style>
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -151,27 +157,46 @@
             <div class="col-md-2">
               <div class="filtros">
                 <h5>Distritos</h5>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Sur</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Norte</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Oeste</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Centro</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Noroeste</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Distrito Sudoeste</button></div>
+                <div id="distritos-togglers">
+                  <div><button data-id="7" type="button" class="btn btn-xs active">Distrito Sur</button></div>
+                  <div><button data-id="4" type="button" class="btn btn-xs active">Distrito Norte</button></div>
+                  <div><button data-id="6" type="button" class="btn btn-xs active">Distrito Oeste</button></div>
+                  <div><button data-id="3" type="button" class="btn btn-xs active">Distrito Centro</button></div>
+                  <div><button data-id="5" type="button" class="btn btn-xs active">Distrito Noroeste</button></div>
+                  <div><button data-id="8" type="button" class="btn btn-xs active">Distrito Sudoeste</button></div>
+                </div>
                 <h5>Comisarías</h5>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 1</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 2</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 3</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 4</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 5</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 6</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 7</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 8</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 9</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 10</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 11</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 12</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 13</button></div>
-                <div><button type="button" class="btn btn-xs" data-toggle="button">Comisaría 14</button></div>
+                <div id="comisarias-togglers">
+                  <div><button data-id="28" type="button" class="btn btn-xs">Comisaría 1</button></div>
+                  <div><button data-id="20" type="button" class="btn btn-xs">Comisaría 2</button></div>
+                  <div><button data-id="13" type="button" class="btn btn-xs">Sub Comisaría 2</button></div>
+                  <div><button data-id="31" type="button" class="btn btn-xs">Comisaría 3</button></div>
+                  <div><button data-id="29" type="button" class="btn btn-xs">Comisaría 4</button></div>
+                  <div><button data-id="15" type="button" class="btn btn-xs">Comisaría 5</button></div>
+                  <div><button data-id="8" type="button" class="btn btn-xs">Comisaría 6</button></div>
+                  <div><button data-id="30" type="button" class="btn btn-xs">Comisaría 7</button></div>
+                  <div><button data-id="10" type="button" class="btn btn-xs">Comisaría 8</button></div>
+                  <div><button data-id="23" type="button" class="btn btn-xs">Comisaría 10</button></div>
+                  <div><button data-id="14" type="button" class="btn btn-xs">Comisaría 11</button></div>
+                  <div><button data-id="6" type="button" class="btn btn-xs">Comisaría 12</button></div>
+                  <div><button data-id="3" type="button" class="btn btn-xs">Comisaría 13</button></div>
+                  <div><button data-id="5" type="button" class="btn btn-xs">Comisaría 14</button></div>
+                  <div><button data-id="16" type="button" class="btn btn-xs">Comisaría 15</button></div>
+                  <div><button data-id="21" type="button" class="btn btn-xs">Comisaría 16</button></div>
+                  <div><button data-id="24" type="button" class="btn btn-xs">Comisaría 17</button></div>
+                  <div><button data-id="7" type="button" class="btn btn-xs">Comisaría 18</button></div>
+                  <div><button data-id="4" type="button" class="btn btn-xs">Comisaría 19</button></div>
+                  <div><button data-id="11" type="button" class="btn btn-xs">Sub Comisaría 19</button></div>
+                  <div><button data-id="18" type="button" class="btn btn-xs">Comisaría 20</button></div>
+                  <div><button data-id="22" type="button" class="btn btn-xs">Sub Comisaría 20</button></div>
+                  <div><button data-id="12" type="button" class="btn btn-xs">Comisaría 21</button></div>
+                  <div><button data-id="17" type="button" class="btn btn-xs">Sub Comisaría 21</button></div>
+                  <div><button data-id="25" type="button" class="btn btn-xs">Sub Comisaría 22</button></div>
+                  <div><button data-id="19" type="button" class="btn btn-xs">Sub Comisaría 24</button></div>
+                  <div><button data-id="26" type="button" class="btn btn-xs">Comisaría 30</button></div>
+                  <div><button data-id="27" type="button" class="btn btn-xs">Comisaría 32</button></div>
+                  <div><button data-id="9" type="button" class="btn btn-xs">Comisaría 33</button></div>
+                </div>
               </div>
             </div>
             <div class="col-md-8">
@@ -192,42 +217,256 @@
               <h2><%- victimas %></h2>
               <h3><%- fecha %></h3>
               <h4><%- direccion %></h4>
+              <h4><%- comisaria %></h4>
               <p><%- resumen %></p>
           </script>
           
           
 
           <script type="text/javascript">
-           (function () {
+
+            nro_comisaria = {
+              "28": "1",
+              "20": "2",
+              "13": "sub2",
+              "31": "3",
+              "29": "4",
+              "15": "5",
+              "8": "6",
+              "30": "7",
+              "10": "8",
+              "23": "10",
+              "14": "11",
+              "6": "12",
+              "3": "13",
+              "5": "14",
+              "16": "15",
+              "21": "16",
+              "24": "17",
+              "7": "18",
+              "4": "19",
+              "11": "sub19",
+              "18": "20",
+              "22": "sub20",
+              "12": "21",
+              "17": "sub21",
+              "25": "sub22",
+              "19": "sub24",
+              "26": "30",
+              "27": "32",
+              "9": "33"
+            }
+
+            function comisariasSeleccionadas() {
+              var seleccionadas = [];
+              $("#comisarias-togglers button").each(function() {
+                if ($(this).hasClass("active")) {
+                  seleccionadas.push(nro_comisaria[$(this).data("id")]);
+                }
+              });
+              return seleccionadas;
+            }
+
+            function main() {
+
+                lastBrush = null;
+
                 var extent, scale, 
                     classes = 9,
-                    reverse = false,
-                    scheme = colorbrewer["YlOrRd"][classes], // No le estamos dando bola a esto, podríamos volarlo
-                    container = L.DomUtil.get('map'),
-                    map = L.map(container).setView([-32.9598, -60.6423], 10);
+                    reverse = false;
+                    container = L.DomUtil.get('map');
+                    //map = L.map(container).setView([-32.9598, -60.6423], 10);
 
                 var tpl = document.getElementById("sideTemplate").text;
+
+                var map = new L.Map('map', {
+                  zoomControl: false,
+                  center: [-32.9598, -60.6423],
+                  zoom: 13
+                });
 
                 L.tileLayer('http://{s}.tiles.mapbox.com/v3/hhrosario.map-wygexzoy/{z}/{x}/{y}.png', {
                   attribution: 'OpenStreetMaps',
                   maxZoom: 17
                 }).addTo(map);
 
-                d3.json(container.dataset.source, function(collection) {
-                    L.pointsLayer(collection, {
-                      radius: 10, // podríamos usar un callback para que tenga un radio relativo a algo, por ahora lo prefiero fijo
-                      applyStyle: circle_style
-                    }).addTo(map);
-                    var chart = timeseries_chart(scheme)
-                            .x(get_time).xLabel("Fecha")
-                            .y(get_quantity).yLabel("Casos")
-                            .brushmove(on_brush);
-                    d3.select("#timeline").datum(collection.features).call(chart);
-                });
+                cartodb.createLayer(map, 'http://hhrosario.cartodb.com/api/v2/viz/d058deb0-6dcc-11e3-bc71-b7b26ac0527a/viz.json', function(layer) {
+
+                   layer.show();
+                   var layerDistritos = layer.createSubLayer({
+                     sql: 'SELECT * FROM distritos',
+                     cartocss: "#distritos { polygon-fill: orange; polygon-opacity: 0.2; line-width: 2; line-color: #a82; line-opacity: 1; }",
+                     interactivity: "cartodb_id, name"
+                   });
+                   layerDistritos.show();
+
+                   layerDistritos.setInteraction(true);
+                   layerDistritos.on('featureClick', function(e, latlng, pos, data, subLayerIndex) {
+                    $("#sidebar-padder").html(data.name);
+                   });
+
+                   $("#distritos-togglers button").on("click", function() {
+
+                     var seleccionados = [];
+                     if($(this).hasClass("active")) {
+                      $(this).removeClass("active");
+                      } else {
+                      $(this).addClass("active");
+                     }
+
+                     $("#distritos-togglers button").each(function() {
+                      if ($(this).hasClass("active")) {
+                        seleccionados.push($(this).data("id"));
+                      }
+                     });
+
+                     if (seleccionados.length > 0) {
+                        layerDistritos.setSQL("SELECT * FROM distritos WHERE cartodb_id IN (" + seleccionados.join(", ") + ")");
+                        layerDistritos.show();
+                     } else {
+                        layerDistritos.hide();
+                     }
+
+                   });
+
+                   //layer.show();
+                   var layerComisarias = layer.createSubLayer({
+                     sql: 'SELECT * FROM comisarias',
+                     cartocss: '#comisarias { polygon-fill: blue; polygon-opacity: 0.4; line-width: 1; line-color: #005; line-opacity: .8; }'
+                   });
+                   //var sublayer = layer.getSubLayer(1);
+                   layerComisarias.hide();
+
+                   $("#comisarias-togglers button").on("click", function() {
+
+                     var seleccionados = [];
+                     if($(this).hasClass("active")) {
+                      $(this).removeClass("active");
+                      } else {
+                      $(this).addClass("active");
+                     }
+
+                     $("#comisarias-togglers button").each(function() {
+                      if ($(this).hasClass("active")) {
+                        seleccionados.push($(this).data("id"));
+                      }
+                     });
+                     
+                     if (seleccionados.length > 0) {
+                        layerComisarias.setSQL("SELECT * FROM comisarias WHERE cartodb_id IN (" + seleccionados.join(", ") + ")");
+                        layerComisarias.show();
+                     } else {
+                        layerComisarias.hide();
+                     }
+
+                    var selection = d3.selectAll("path").classed("selected", function (d) {
+                      var seleccionadas = comisariasSeleccionadas();
+                      if (d.properties) {
+                        var nro = d.properties.comisaria.replace("ª", "");
+                        var indiceEnArray = seleccionadas.indexOf(nro);
+                        if (indiceEnArray > -1) {
+                          return true;
+                        }
+                      }
+                    });
+
+                    var cantidadPorComisarias = selection.filter(".selected")[0].length;
+
+                   });
+
+                   /*
+                   var layerHomicidios = layer.createSubLayer({
+                     sql: 'SELECT * FROM homis_2013_ros_lim',
+                     cartocss: '#homis_2013_ros_lim{  marker-width: 12;  marker-fill: #09a;  marker-opacity: 1;  marker-allow-overlap: true;  marker-placement: point;  marker-type: ellipse;  marker-line-width: 2;  marker-line-color: #FFF;  marker-line-opacity: 1;}'
+                   });
+                   layerHomicidios.show();
+                   layerHomicidios.setInteraction(true);*/
+
+
+                }).addTo(map);
+                //return;
+
+                var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+                    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+                d3.json("homicidios.json", function(collection) {
+
+                  // Dibuja los puntos sobre el mapa de Leaflet con D3.js
+                  var transform = d3.geo.transform({point: projectPoint}),
+                      path = d3.geo.path().projection(transform),
+                      bounds = path.bounds(collection);
+
+                  var feature = g.selectAll(".leaflet-overlay-pane path")
+                    .data(collection.features)
+                    .enter()
+                    .append("path")
+                    .attr('opacity', 0.7)
+                    .attr('stroke', "#0077ee")
+                    .attr('stroke-width', 2)
+                    .attr('cursor', 'pointer')
+                    .attr('fill', "#0077dd");
+
+                  map.on("viewreset", reset);
+                  reset();
+
+                  function reset() {
+
+                    // Reposicionar la capa SVG que se añade al mapa 
+                    var topLeft = bounds[0],
+                        bottomRight = bounds[1];
+
+                    svg.attr("width", bottomRight[0] - topLeft[0])
+                       .attr("height", bottomRight[1] - topLeft[1])
+                       .style("left", topLeft[0] + "px")
+                       .style("top", topLeft[1] + "px");
+
+                    g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+                    feature.attr("d", path);
+                    feature.attr("class", "circle");
+                    feature.on('click', function (d, i) {
+                      L.DomEvent.stopPropagation(d3.event);
+                      console.log(d.properties);
+                      var data = {
+                          fecha: d.properties.fecha,
+                          direccion: d.properties.direccion,
+                          victimas: d.properties.victimas,
+                          resumen: d.properties.resumen,
+                          comisaria: d.properties.comisaria
+                      };
+                      document.getElementById('sidebar-padder').innerHTML = _.template(tpl, data);
+                    });
+                  }
+
+                  // Use Leaflet to implement a D3 geometric transformation.
+                  function projectPoint(x, y) {
+                    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                    this.stream.point(point.x, point.y);
+                  }
+
+                  var chart = timeseries_chart()
+                    .x(get_time).xLabel("Fecha")
+                    .y(get_quantity).yLabel("Casos")
+                    .brushmove(on_brush);
+                  d3.select("#timeline").datum(collection.features).call(chart);
+
+////////////
+
+                function puntosFiltrados() {
+                  d3.selectAll(".leaflet-overlay-pane path").classed("selected", function (d) {
+                      var time = get_time(d);
+                      var enFecha = s[0] <= time && time <= s[1];
+                      //var nro_comisaria = id_comisaria[d.properties.comisaria.replace("ª", "")];
+                      //var enComisarias = 
+                  });
+                }
 
                 function on_brush(brush) {
+                  if (brush) {
+                    lastBrush = brush;
+                  }
                   var s = brush.extent();
-                  d3.selectAll(".circle").classed("selected", function (d) {
+                  d3.selectAll(".leaflet-overlay-pane path").classed("selected", function (d) {
                       var time = get_time(d);
                       return s[0] <= time && time <= s[1];
                   });
@@ -250,7 +489,7 @@
                               .range(d3.range(classes));
                   }
                   circles.attr('opacity', 0.7)
-                    .attr('stroke', "#0077ee")
+                    .attr('stroke', "#99aaff")
                     .attr('stroke-width', 2)
                     .attr('cursor', 'pointer')
                     .attr('fill', "#0077dd");
@@ -268,10 +507,9 @@
 
                 };
 
-              function timeseries_chart(color) {
+              function timeseries_chart() {
                   var margin = { top: 20, right: 20, bottom: 20, left: 20 },
                       width = 680,
-                      //width = 960 - margin.left - margin.right,
                       height = 80;
 
                   var x = d3.time.scale(),
@@ -348,16 +586,17 @@
 
                           series.append("g").attr("class", "timeseries")
                               .attr("clip-path", "url(#clip)")
-                              .selectAll("circle")
+                              .selectAll("rect")
                               .data(d).enter()
-                              .append("circle") // Deberían ser barras, más altas si hay más de un caso en ese día... veremos.
+                              .append("rect") // Deberían ser barras, más altas si hay más de un caso en ese día... veremos.
                               .style("stroke", '#0022aa')
                               .style("stroke-width", .5)
                               .style("fill", '#0077dd')
                               .attr("opacity", .8)
-                              .attr("r", 10)
+                              .attr("width", 3)
+                              .attr("height", 30)
                               .attr("transform", function (d) {
-                                  return "translate(" + x(get_x(d)) + "," + y(get_y(d)) + ")";
+                                  return "translate(" + x(get_x(d)) + "," + (y(get_y(d)) - 30) + ")";
                               });
                       });
                   }
@@ -399,9 +638,29 @@
                   function no_op() {}
 
                   return timeseries;
+
               }
 
-            }());
+/////////////
+                }); // D3.json fin
+
+                /*
+                d3.json(container.dataset.source, function(collection) {
+                    L.pointsLayer(collection, {
+                      radius: 10, // podríamos usar un callback para que tenga un radio relativo a algo, por ahora lo prefiero fijo
+                      applyStyle: circle_style
+                    }).addTo(map);
+                    var chart = timeseries_chart(scheme)
+                            .x(get_time).xLabel("Fecha")
+                            .y(get_quantity).yLabel("Casos")
+                            .brushmove(on_brush);
+                    d3.select("#timeline").datum(collection.features).call(chart);
+                });*/
+
+
+
+            };
+            window.onload = main;
           </script>
 
 
