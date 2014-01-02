@@ -134,6 +134,17 @@
 
       #splatter { display: none }
 
+      .area-comisaria {
+        visibility: hidden;
+        stroke: #0077ee;
+        stroke-width: 2;
+        cursor: pointer;
+        fill: #C2DEFC;
+        opacity: 0.5;
+      }
+
+      .area-comisaria.selected { visibility: visible; }
+
       .circle {
         visibility: hidden; 
         opacity: 0.7;
@@ -339,11 +350,50 @@
               return d3.time.format("%d/%m/%y").parse(d.properties.fecha);
             }
 
+            mapaHomicidios.mostrarComisariasFiltradas = function() {
+              var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
+              var rangoFechas = mapaHomicidios.brush.extent();
+
+              var seleccionadas = [];
+              $("#comisarias-togglers button").each(function() {
+                if ($(this).hasClass("active")) {
+                  seleccionadas.push($(this).data("id"));
+                }
+              });
+
+              var selection = d3.selectAll("#svg-comisarias path").classed("selected", function (d) {
+
+                return !!(seleccionadas.indexOf(d.properties.cartodb_id) > -1);
+                /*
+                var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
+                var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
+                var enComisaria = false;
+
+                var nro = d.properties.comisaria.replace("ª", "");
+                if (comisariasSeleccionadas.length > 0) {
+                  var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
+                  if (indiceEnArray > -1) {
+                    enComisaria = true;
+                  }
+                } else {
+                  enComisaria = true;
+                }
+
+                return enFecha && enComisaria;
+                */
+              });
+
+              //mapaHomicidios.cantidadPuntos = selection.filter(".selected")[0].length;
+
+            }
+
             mapaHomicidios.mostrarPuntosFiltrados = function() {
               var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
               var rangoFechas = mapaHomicidios.brush.extent();
 
-              var selection = d3.selectAll(".leaflet-overlay-pane path").classed("selected", function (d) {
+              mapaHomicidios.mostrarComisariasFiltradas();
+
+              var selection = d3.selectAll("#svg-puntos path").classed("selected", function (d) {
 
                   var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
                   var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
@@ -469,12 +519,13 @@
                    });
 
                    //layer.show();
+                   /*
                    var layerComisarias = layer.createSubLayer({
                      sql: 'SELECT * FROM comisarias',
                      cartocss: '#comisarias { polygon-fill: #75B7F0; polygon-opacity: 0.4; line-width: 1; line-color: #06569C; line-opacity: .8; }'
                    });
                    //var sublayer = layer.getSubLayer(1);
-                   layerComisarias.hide();
+                   layerComisarias.hide();*/
 
                    $("#comisarias-togglers button").on("click", function() {
 
@@ -491,13 +542,13 @@
                       }
                      });
                      
-                     
+                     /*
                      if (seleccionados.length > 0) {
                         layerComisarias.setSQL("SELECT * FROM comisarias WHERE cartodb_id IN (" + seleccionados.join(", ") + ")");
                         layerComisarias.show();
                      } else {
                         layerComisarias.hide();
-                     }
+                     }*/
 
                     /*
                     var selection = d3.selectAll("path").classed("selected", function (d) {
@@ -520,27 +571,93 @@
                    });
 
                 }).addTo(map);
+                
+                // Agregar la capa SVG para las comisarías a Leaflet
+                var svgComis = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-comisarias"),
+                    gComis = svgComis.append("g").attr("class", "leaflet-zoom-hide");
+
+                d3.json("comisarias.geojson", function(collection) {
+
+                  console.log(collection);
+
+                  // Dibuja los puntos sobre el mapa de Leaflet con D3.js
+                  var transform = d3.geo.transform({point: projectPoint});
+                  
+                  mapaHomicidios.pathComis = d3.geo.path().projection(transform);
+                  mapaHomicidios.boundsComis = mapaHomicidios.pathComis.bounds(collection);
+
+                  // Obtener los puntos y asignar una clase
+                  mapaHomicidios.featureComis = gComis.selectAll("path")
+                    .data(collection.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "area-comisaria");
+
+                  // Use Leaflet to implement a D3 geometric transformation.
+                  function projectPoint(x, y) {
+                    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                    this.stream.point(point.x, point.y);
+                  }
+
+                  map.on("viewreset", resetCapasSVG);
+                  resetCapasSVG();
+
+                });
+
+                // Reposition the SVG to cover the features.
+                function resetCapasSVG() {
+
+                  var topLeft = mapaHomicidios.boundsComis[0],
+                      bottomRight = mapaHomicidios.boundsComis[1];
+
+                  svgComis.attr("width", bottomRight[0] - topLeft[0])
+                    .attr("height", bottomRight[1] - topLeft[1])
+                    .style("left", topLeft[0] + "px")
+                    .style("top", topLeft[1] + "px");
+
+                  gComis.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+                  mapaHomicidios.featureComis.attr("d", mapaHomicidios.pathComis);
+
+                  if (mapaHomicidios.boundsPuntos) {
+                    var topLeft = mapaHomicidios.boundsPuntos[0],
+                        bottomRight = mapaHomicidios.boundsComis[1];
+
+                    svg.attr("width", bottomRight[0] - topLeft[0])
+                      .attr("height", bottomRight[1] - topLeft[1])
+                      .style("left", topLeft[0] + "px")
+                      .style("top", topLeft[1] + "px");
+
+                    g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+                    mapaHomicidios.featurePuntos.attr("d", mapaHomicidios.pathPuntos);
+                  }
+
+                }
+
+                //return;
 
                 // Agregar la capa SVG para los puntos a Leaflet
-                var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+                var svg = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-puntos"),
                     g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
                 d3.json("homicidios.json", function(collection) {
 
                   // Dibuja los puntos sobre el mapa de Leaflet con D3.js
-                  var transform = d3.geo.transform({point: projectPoint}),
-                      path = d3.geo.path().projection(transform),
-                      bounds = path.bounds(collection);
+                  var transform = d3.geo.transform({point: projectPoint});
+                      
+                  mapaHomicidios.pathPuntos = d3.geo.path().projection(transform);
+                  mapaHomicidios.boundsPuntos = mapaHomicidios.pathPuntos.bounds(collection);
 
                   // Obtener los puntos y asignar una clase
-                  var feature = g.selectAll(".leaflet-overlay-pane path")
+                  mapaHomicidios.featurePuntos = g.selectAll("#svg-puntos path")
                     .data(collection.features)
                     .enter()
                     .append("path")
                     .attr("class", "circle");
                   
                   // Listener para el click en un punto del mapa
-                  feature.on("click", function (d, i) {
+                  mapaHomicidios.featurePuntos.on("click", function (d, i) {
                     L.DomEvent.stopPropagation(d3.event);
                     var data = {
                         fecha: d.properties.fecha,
@@ -553,12 +670,12 @@
                     $("#sidebar").fadeIn();
                   });
 
-                  map.on("viewreset", resetSVG);
+                  //map.on("viewreset", resetPuntos);
+                  //resetPuntos();
 
-                  resetSVG();
-
-                  function resetSVG() {
+                  function resetPuntos() {
                     // Reposicionar la capa SVG que se añade al mapa 
+                    console.log(bounds);
                     var topLeft = bounds[0],
                         bottomRight = bounds[1];
 
@@ -569,7 +686,7 @@
 
                     g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
 
-                    feature.attr("d", path);
+                    mapaHomicidios.featurePuntos.attr("d", path);
 
                   }
 
