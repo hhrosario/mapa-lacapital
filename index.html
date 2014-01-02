@@ -29,6 +29,9 @@
 
     <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  
+    <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.css" />
+
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
     <![endif]-->
@@ -37,7 +40,10 @@
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.ie.css" />
     <![endif]-->
+
+    <script src="vendor/leaflet-zoomslider/L.Control.Zoomslider.js"></script>
 
     <link href="css/sticky-footer.css" rel="stylesheet">
     <link href="css/mapa.css" rel="stylesheet">
@@ -149,6 +155,7 @@
               <h5><img src="images/map-pin.png" style="height: 16px"> <%- direccion %></h5>
               <h5><img src="images/comisaria.png" style="height: 16px"> <%- comisaria %></h5>
               <p><%- resumen %></p>
+              <a href="<%- link %>" target="_blank">Nota en LaCapital.com.ar</a>
           </script>
           
           <script type="text/javascript">
@@ -195,29 +202,8 @@
               });
 
               var selection = d3.selectAll("#svg-comisarias path").classed("selected", function (d) {
-
                 return !!(seleccionadas.indexOf(d.properties.cartodb_id) > -1);
-                /*
-                var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
-                var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
-                var enComisaria = false;
-
-                var nro = d.properties.comisaria.replace("ª", "");
-                if (comisariasSeleccionadas.length > 0) {
-                  var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
-                  if (indiceEnArray > -1) {
-                    enComisaria = true;
-                  }
-                } else {
-                  enComisaria = true;
-                }
-
-                return enFecha && enComisaria;
-                */
               });
-
-              //mapaHomicidios.cantidadPuntos = selection.filter(".selected")[0].length;
-
             }
 
             mapaHomicidios.mostrarPuntosFiltrados = function() {
@@ -226,7 +212,7 @@
 
               mapaHomicidios.mostrarComisariasFiltradas();
 
-              var selection = d3.selectAll("#svg-puntos path").classed("selected", function (d) {
+              var selection = d3.selectAll("#svg-puntos path.circle").classed("selected", function (d) {
 
                   var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
                   var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
@@ -351,15 +337,6 @@
 
                    });
 
-                   //layer.show();
-                   /*
-                   var layerComisarias = layer.createSubLayer({
-                     sql: 'SELECT * FROM comisarias',
-                     cartocss: '#comisarias { polygon-fill: #75B7F0; polygon-opacity: 0.4; line-width: 1; line-color: #06569C; line-opacity: .8; }'
-                   });
-                   //var sublayer = layer.getSubLayer(1);
-                   layerComisarias.hide();*/
-
                    $("#comisarias-togglers button").on("click", function() {
 
                      var seleccionados = [];
@@ -374,29 +351,6 @@
                         seleccionados.push($(this).data("id"));
                       }
                      });
-                     
-                     /*
-                     if (seleccionados.length > 0) {
-                        layerComisarias.setSQL("SELECT * FROM comisarias WHERE cartodb_id IN (" + seleccionados.join(", ") + ")");
-                        layerComisarias.show();
-                     } else {
-                        layerComisarias.hide();
-                     }*/
-
-                    /*
-                    var selection = d3.selectAll("path").classed("selected", function (d) {
-                      var seleccionadas = obtenerComisariasSeleccionadas();
-                      if (d.properties) {
-                        var nro = d.properties.comisaria.replace("ª", "");
-                        var indiceEnArray = seleccionadas.indexOf(nro);
-                        if (indiceEnArray > -1) {
-                          return true;
-                        }
-                      }
-                    });
-
-                    
-                    */
 
                     mapaHomicidios.mostrarPuntosFiltrados();
                     mapaHomicidios.actualizarTextoFiltros();
@@ -470,8 +424,6 @@
 
                 }
 
-                //return;
-
                 // Agregar la capa SVG para los puntos a Leaflet
                 var svg = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-puntos"),
                     g = svg.append("g").attr("class", "leaflet-zoom-hide");
@@ -487,7 +439,7 @@
                   });
 
                   // Obtener los puntos y asignar una clase
-                  mapaHomicidios.featurePuntos = g.selectAll("#svg-puntos path")
+                  mapaHomicidios.featurePuntos = g.selectAll("#svg-puntos path.circle")
                     .data(collection.features)
                     .enter()
                     .append("path")
@@ -501,7 +453,8 @@
                         direccion: d.properties.direccion,
                         victimas: d.properties.victimas,
                         resumen: d.properties.resumen,
-                        comisaria: d.properties.comisaria
+                        comisaria: d.properties.comisaria,
+                        link: d.properties.link
                     };
                     document.getElementById('sidebar-padder').innerHTML = _.template(tpl, data);
                     $("#sidebar").fadeIn();

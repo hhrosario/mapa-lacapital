@@ -116,23 +116,23 @@ svg {
 .area-comisaria.selected { visibility: visible; }
 
 .circle {
+  visibility: hidden;
   transition: all .2s;
   -webkit-transition: all .2s;
   -moz-transition: all .2s;
-  visibility: hidden; 
-  opacity: 0.6;
+  opacity: 0;
   stroke: #0077ee;
   stroke-width: 2;
   cursor: pointer;
   fill: #5D97F5;
 
 }
-.circle:hover {
+.circle.selected:hover {
   opacity: 0.9;
   fill: #FF8903;
   stroke: #FF4E03;
 }
-.circle.selected { visibility: visible; }
+.circle.selected { opacity: 0.6; visibility: visible; }
 
 .filtros div { margin-bottom: 5px; }
 
@@ -155,14 +155,6 @@ svg {
 .filtros button.active {
   background: rgb(41, 82, 122);
   color: white;
-}
-
-.leaflet-zoom-hide circle {
-  visibility: hidden;
-}
-
-.leaflet-zoom-hide circle.selected {
-  visibility: visible;
 }
 
 /* Estilos para D3 */ 
