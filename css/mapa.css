@@ -1,0 +1,181 @@
+body {
+  background: #ddd url(../images/grid.png);
+  height: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+.main-padder {
+  padding: 30px;
+  background: white;
+}
+
+.container.with-navbar {
+  padding-top: 45px;
+}
+
+#footer {
+  background: #444 url(../images/noisy_net.png);
+}
+
+#scroll-filtros #comisarias-togglers {
+  height: 400px;
+}
+
+.mapa-y-filtros {
+  position: relative;
+}
+
+.mapa-y-filtros h5:first-child {
+  margin-top: 0px;
+  margin-bottom: 9px;
+}
+
+.titulo-color {
+  color: #09A1ED;
+  font-weight: 400;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav.navbar-right:last-child { /* Overriding default bootstrap style */
+    margin-right: 0px;
+  }
+}
+
+@media (max-width: 479px) {
+  .main-padder {
+    padding: 10px;
+    background: white;
+  }
+}
+
+#map { 
+  height: 500px;
+  width: 100%;
+}
+
+#sidebar { 
+  height: 500px;
+  width: 300px;
+  color: #333;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0px 0px 15px #999;
+  border-bottom: 8px solid #09A1ED;
+}
+
+#sidebar #cerrar-sidebar { 
+  height: 24px;
+  width: 24px;
+  opacity: .5;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+#sidebar-padder {
+  padding: 20px;
+}
+
+svg {
+  font: 10px sans-serif;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #ccc;
+  shape-rendering: crispEdges;
+}
+
+#splatter { display: none }
+
+.area-comisaria {
+  transition: all .2s;
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  visibility: hidden;
+  stroke: #0077ee;
+  stroke-width: 2;
+  cursor: pointer;
+  fill: #C2DEFC;
+  opacity: 0.5;
+}
+
+.area-comisaria:hover {
+  opacity: 0.8;
+  fill: #5D97F5;
+}
+
+.area-comisaria.selected { visibility: visible; }
+
+.circle {
+  transition: all .2s;
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  visibility: hidden; 
+  opacity: 0.6;
+  stroke: #0077ee;
+  stroke-width: 2;
+  cursor: pointer;
+  fill: #5D97F5;
+
+}
+.circle:hover {
+  opacity: 0.9;
+  fill: #FF8903;
+  stroke: #FF4E03;
+}
+.circle.selected { visibility: visible; }
+
+.filtros div { margin-bottom: 5px; }
+
+.filtros button {
+  display: block;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  font-size: 9pt;
+}
+
+.filtros h5:first-child {
+  margin-top: 0px;
+}
+
+.filtros button:hover {
+  color: #333;
+}
+
+.filtros button.active {
+  background: rgb(41, 82, 122);
+  color: white;
+}
+
+.leaflet-zoom-hide circle {
+  visibility: hidden;
+}
+
+.leaflet-zoom-hide circle.selected {
+  visibility: visible;
+}
+
+/* Estilos para D3 */ 
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #777;
+  shape-rendering: crispEdges;
+}
+
+.resize rect {
+  visibility: visible !important;
+  fill: #777 !important;
+  stroke: #444 !important;
+  opacity: .7 !important;
+}
