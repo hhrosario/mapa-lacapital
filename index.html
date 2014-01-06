@@ -82,6 +82,7 @@
             <div class="col-md-2">
               <div class="filtros">
                 <h5 class="titulo-color">Filtros <small>- Click para activar</small></h5>
+                <button id="limpiar-filtros" class="btn btn-xs btn-block"><i class="fa fa-undo"></i> Limpiar filtros</button>
                 <div id="scroll-filtros">
                   <h6>Distritos</h6>
                   <div id="distritos-togglers">
@@ -129,6 +130,10 @@
             </div>
             <div class="col-md-10 mapa-y-filtros">
 
+              <div class="autoplay-wrapper">
+                <button id="autoplay" title="Animar el rango de fechas" class="btn btn-primary"><i class="fa fa-play"></i> Reproducir</button><br>
+              </div>
+
               <h5 class="titulo-color">Mapa <small>- Hacé click en los puntos para más detalles.</small></h5>
 
               <div>
@@ -167,6 +172,61 @@
 
             mapaHomicidios.brush = null;
             mapaHomicidios.cantidadPuntos = 0;
+            mapaHomicidios.fechaInicio = new Date(2013, 0, 1, 0, 0, 0, 0);
+            mapaHomicidios.fechaFin = new Date(2013, 11, 31, 23, 59, 59, 0);
+            mapaHomicidios.cursorAutoPlay = moment(mapaHomicidios.fechaInicio).add('days', 1).toDate();
+            mapaHomicidios.enAutoPlay = false;
+
+            mapaHomicidios.autoplay = function() {
+
+              mapaHomicidios.limpiarFiltros();
+              mapaHomicidios.enAutoPlay = true;
+
+              mapaHomicidios.cursorAutoPlay = mapaHomicidios.fechaInicio;
+
+              $("#autoplay").off("click");
+              $("#autoplay").html("<i class='fa fa-stop'></i> Detener");
+              $("#autoplay").on("click", function() {
+                mapaHomicidios.stop();
+              })
+
+              mapaHomicidios.autoPlayInterval = setInterval(
+                function() {
+                  mapaHomicidios.cursorAutoPlay = moment(mapaHomicidios.cursorAutoPlay).add('days', 1).toDate();
+
+                  if (mapaHomicidios.cursorAutoPlay > mapaHomicidios.fechaFin) {
+                    mapaHomicidios.stop();
+                    return;
+                  }
+
+                  mapaHomicidios.brush.extent([mapaHomicidios.fechaInicio, mapaHomicidios.cursorAutoPlay]);
+                  d3.select('.brush').call(mapaHomicidios.brush);
+                  mapaHomicidios.mostrarPuntosFiltrados();
+                  mapaHomicidios.actualizarTextoFiltros();
+                  var s = mapaHomicidios.brush.extent();
+                  $("#filtros-fechadesde").html(moment(s[0]).format("D [de] MMMM"));
+                  $("#filtros-fechahasta").html(moment(s[1]).format("D [de] MMMM"));
+
+                }
+                , 25
+              );
+            }
+
+            mapaHomicidios.stop = function() {
+              if (mapaHomicidios.enAutoPlay) {
+                $("#autoplay").off("click");
+                $("#autoplay").html("<i class='fa fa-play'></i> Reproducir");
+                $("#autoplay").on("click", function() {
+                  mapaHomicidios.autoplay();
+                })
+                clearInterval(mapaHomicidios.autoPlayInterval);  
+                mapaHomicidios.enAutoPlay = false;
+              }
+            }
+
+            mapaHomicidios.limpiarFiltros = function() {
+              $(".comisarias-togglers .active").removeClass("active");
+            }
 
             mapaHomicidios.actualizarTextoFiltros = function() {
               var seleccionadas = [];
@@ -211,24 +271,24 @@
               var rangoFechas = mapaHomicidios.brush.extent();
 
               mapaHomicidios.mostrarComisariasFiltradas();
-
+              
               var selection = d3.selectAll("#svg-puntos path.circle").classed("selected", function (d) {
 
-                  var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
-                  var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
-                  var enComisaria = false;
+                var fechaPunto = mapaHomicidios.obtenerFechaPunto(d);
+                var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
+                var enComisaria = false;
 
-                  var nro = d.properties.comisaria.replace("ª", "");
-                  if (comisariasSeleccionadas.length > 0) {
-                    var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
-                    if (indiceEnArray > -1) {
-                      enComisaria = true;
-                    }
-                  } else {
+                var nro = d.properties.comisaria.replace("ª", "");
+                if (comisariasSeleccionadas.length > 0) {
+                  var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
+                  if (indiceEnArray > -1) {
                     enComisaria = true;
                   }
+                } else {
+                  enComisaria = true;
+                }
 
-                  return enFecha && enComisaria;
+                return enFecha && enComisaria;
               });
 
               mapaHomicidios.cantidadPuntos = selection.filter(".selected")[0].length;
@@ -290,7 +350,8 @@
                 var map = new L.Map('map', {
                   zoomControl: false,
                   center: [-32.9598, -60.6423],
-                  zoom: 13
+                  zoom: 13,
+                  zoomAnimation: false
                 });
 
                 L.tileLayer('http://{s}.tiles.mapbox.com/v3/hhrosario.map-wygexzoy/{z}/{x}/{y}.png', {
@@ -315,6 +376,8 @@
 
                    $("#distritos-togglers button").on("click", function() {
 
+                    mapaHomicidios.stop();
+
                      var seleccionados = [];
                      if($(this).hasClass("active")) {
                       $(this).removeClass("active");
@@ -338,6 +401,8 @@
                    });
 
                    $("#comisarias-togglers button").on("click", function() {
+
+                    mapaHomicidios.stop();
 
                      var seleccionados = [];
                      if($(this).hasClass("active")) {
@@ -385,7 +450,6 @@
                   }
 
                   map.on("viewreset", resetCapasSVG);
-                  resetCapasSVG();
 
                 });
 
@@ -435,7 +499,7 @@
                       
                   mapaHomicidios.collectionPuntos = collection;
                   mapaHomicidios.pathPuntos = d3.geo.path().projection(transform).pointRadius(function (d) { 
-                    return 8; // TODO: Implementar radio según zoom del mapa
+                    return 5; // TODO: Implementar radio según zoom del mapa
                   });
 
                   // Obtener los puntos y asignar una clase
@@ -472,9 +536,8 @@
                     .brushmove(on_brush);
                   d3.select("#timeline").datum(collection.features).call(chart);
 
-////////////
-
                 function on_brush(brush) {
+                  mapaHomicidios.stop();
                   if (brush) {
                     mapaHomicidios.brush = brush;
                   }
@@ -485,10 +548,6 @@
                   mapaHomicidios.mostrarPuntosFiltrados();
                   mapaHomicidios.actualizarTextoFiltros();
 
-                  /*d3.selectAll(".leaflet-overlay-pane path").classed("selected", function (d) {
-                      var time = get_time(d);
-                      return s[0] <= time && time <= s[1];
-                  });*/
                 }
 
                 function get_quantity(d) {
@@ -500,13 +559,17 @@
                       width = 860,
                       height = 80;
 
-                  var x = d3.time.scale(),
+                  var x = d3.time.scale()
+                        .domain([mapaHomicidios.fechaInicio, mapaHomicidios.fechaFin])
+                        .range([0, width]),
                       y = d3.scale.linear(),
                       x_label = "X", y_label = "Y";
-                  mapaHomicidios.brush = d3.svg.brush().x(x).on("brush", _brushmove);
 
-                  mapaHomicidios.brush.extent([0, width]);
-                  svg.select(".brush").call(mapaHomicidios.brush);
+                  mapaHomicidios.brush = d3.svg.brush()
+                      .x(x)
+                      .extent([mapaHomicidios.fechaInicio, mapaHomicidios.fechaFin])
+                      .on("brush", _brushmove);
+
                   mapaHomicidios.mostrarPuntosFiltrados();
                   mapaHomicidios.actualizarTextoFiltros();
 
@@ -635,8 +698,9 @@
 
               }
 
-/////////////
-                }); // D3.json fin
+              resetCapasSVG();
+
+              }); // D3.json fin
 
               $("#cerrar-sidebar").on("click", function () {
                 $("#sidebar").fadeOut();
@@ -644,6 +708,10 @@
 
               $("#comisarias-togglers").mCustomScrollbar({
                 theme: "dark-thick"
+              });
+
+              $("#autoplay").on("click", function() {
+                mapaHomicidios.autoplay();
               });
 
             };
