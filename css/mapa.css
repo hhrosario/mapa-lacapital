@@ -7,6 +7,16 @@ html {
   height: 100%;
 }
 
+.nota {
+  max-width: 600px;
+  margin: auto;
+}
+
+.nota img {
+  width: 100%;
+  margin: 15px 0;
+}
+
 .main-padder {
   padding: 30px;
   background: white;

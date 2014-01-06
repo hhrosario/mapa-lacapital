@@ -13,38 +13,17 @@
 
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
-    <link href="vendor/bootswatch/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootswatch/bootstrap.css" rel="stylesheet">
     
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
     
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
-    <script src="vendor/momentjs/moment-with-langs.min.js"></script>
-
-    
-    <script src="http://d3js.org/d3.v3.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.0.0-rc.3/lodash.underscore.min.js"></script>
-
-    <script src="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-
-    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
-  
-    <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.css" />
-
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
-    <![endif]-->
-    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-      <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.ie.css" />
     <![endif]-->
-
-    <script src="vendor/leaflet-zoomslider/L.Control.Zoomslider.js"></script>
 
     <link href="css/sticky-footer.css" rel="stylesheet">
     <link href="css/mapa.css" rel="stylesheet">
@@ -80,451 +59,469 @@
 
         <div class="main-padder">
 
-<h1>Crónica de un trabajo en equipo<h1>
+          <div class="nota">
 
-<h4>por Ezequiel Clerici</h4>
+            <h1>Crónica de un trabajo en equipo<h1>
 
-@HacksHackersROS
+            <h4>por Ezequiel Clerici</h4>
 
-<p>
-El Mapa de Homicidios Dolosos 2013 en la ciudad de Rosario, es la primer plataforma de 
+            @HacksHackersROS
 
-periodismo de datos que se desarrolló íntegramente para ser publicado en un medio de 
+            <p>
+            El Mapa de Homicidios Dolosos 2013 en la ciudad de Rosario, es la primer plataforma de 
 
-prensa local. La plataforma y el mapa son la consecuencia de varios meses de intenso trabajo, 
+            periodismo de datos que se desarrolló íntegramente para ser publicado en un medio de 
 
-intercambio de ideas, información y la construcción de una confianza mutua entre un equipo de 
+            prensa local. La plataforma y el mapa son la consecuencia de varios meses de intenso trabajo, 
 
-periodistas y programadores de Hacks/Hackers Rosario y otro liderado por Hernán Lascano del 
+            intercambio de ideas, información y la construcción de una confianza mutua entre un equipo de 
 
-diario La Capital.</p>
+            periodistas y programadores de Hacks/Hackers Rosario y otro liderado por Hernán Lascano del 
 
-<p>
-Como todo aquello que se lleva a cabo por vez primera, detrás existe una historia y quienes 
+            diario La Capital.</p>
 
-estuvimos involucrados en este trabajo quisiéramos compartirla con el lector a modo de 
+            <p>
+            Como todo aquello que se lleva a cabo por vez primera, detrás existe una historia y quienes 
 
-introducción para luego sí meternos de lleno en el paso a paso de cómo se hizo la plataforma.
+            estuvimos involucrados en este trabajo quisiéramos compartirla con el lector a modo de 
 
-Hacks/Hackers (HH) es una organización descentralizada sin fines de lucro ni filiación 
+            introducción para luego sí meternos de lleno en el paso a paso de cómo se hizo la plataforma.
 
-política, que reúne a periodistas, programadores, diseñadores y emprendedores tecnológicos 
+            Hacks/Hackers (HH) es una organización descentralizada sin fines de lucro ni filiación 
 
-interesados en el futuro de los medios. Fue creada por Burt Herman (Storify), Rich Gordon 
+            política, que reúne a periodistas, programadores, diseñadores y emprendedores tecnológicos 
 
-y Aron Pilhofer de The New York Times. Su primer encuentro se realizó en San Francisco 
+            interesados en el futuro de los medios. Fue creada por Burt Herman (Storify), Rich Gordon 
 
-en noviembre de 2009 y actualmente cuenta con miles de miembros y capítulos activos en 
+            y Aron Pilhofer de The New York Times. Su primer encuentro se realizó en San Francisco 
 
-ciudades de todo el mundo.</p>
+            en noviembre de 2009 y actualmente cuenta con miles de miembros y capítulos activos en 
 
-<p>
+            ciudades de todo el mundo.</p>
 
-En marzo de 2014 se van a cumplir tres años de un tuit de Mariano Blejman—ex editor de 
+            <p>
 
-Cultura Digital en Página/12, Knight Fellow ICFJ y miembro fundador de Hacks/Hackers 
+            En marzo de 2014 se van a cumplir tres años de un tuit de Mariano Blejman—ex editor de 
 
-Buenos Aires junto a Guillermo Movia (Mozilla Argentina), Martín Sarsale (Properati) y Cesar 
+            Cultura Digital en Página/12, Knight Fellow ICFJ y miembro fundador de Hacks/Hackers 
 
-Miquel (EasyTech)— en el que desde su cuenta personal en twitter convocaba a periodistas, 
+            Buenos Aires junto a Guillermo Movia (Mozilla Argentina), Martín Sarsale (Properati) y Cesar 
 
-programadores, diseñadores y emprendedores de todo el país al primer encuentro de Hacks/
+            Miquel (EasyTech)— en el que desde su cuenta personal en twitter convocaba a periodistas, 
 
-Hackers en la ciudad de Buenos Aires (BA).</p>
+            programadores, diseñadores y emprendedores de todo el país al primer encuentro de Hacks/
 
-<p>
+            Hackers en la ciudad de Buenos Aires (BA).</p>
 
-La consigna era tan simple en su postulado como ambiciosa y difícil de alcanzar: “reiniciar el 
+            <img src="images/nota/hh1.jpg">
 
-periodismo” en Argentina. Readaptar la forma en que los periodistas y medios de comunicación 
+            <p>
 
-trabajamos y contamos nuestras historias en pos de un nuevo y exigente lector-usuario 
+            La consigna era tan simple en su postulado como ambiciosa y difícil de alcanzar: “reiniciar el 
 
-atravesado por Internet—su cultura y formas de operar y producir— que cada día se aleja más 
+            periodismo” en Argentina. Readaptar la forma en que los periodistas y medios de comunicación 
 
-de las formas tradicionales de lectura informativa y sus antiguos soportes de consumo.
+            trabajamos y contamos nuestras historias en pos de un nuevo y exigente lector-usuario 
 
-Hacía esa aventura nos lanzamos un reducido grupo de periodistas y programadores el 28 
+            atravesado por Internet—su cultura y formas de operar y producir— que cada día se aleja más 
 
-de abril de 2011 tras asistir al primer meetup de Hacks/Hackers Buenos Aires (HHBA) y que 
+            de las formas tradicionales de lectura informativa y sus antiguos soportes de consumo.
 
-continuamos al día de hoy consolidados en una comunidad que se divide en tres capítulos 
+            Hacía esa aventura nos lanzamos un reducido grupo de periodistas y programadores el 28 
 
-locales (Buenos Aires, Rosario, Mendoza) y que en su conjunto reúnen a más de 3000 
+            de abril de 2011 tras asistir al primer meetup de Hacks/Hackers Buenos Aires (HHBA) y que 
 
-personas en todo el país.</p>
+            continuamos al día de hoy consolidados en una comunidad que se divide en tres capítulos 
 
-<p>
+            locales (Buenos Aires, Rosario, Mendoza) y que en su conjunto reúnen a más de 3000 
 
-Si bien todavía nos encontramos lejos de lograr el objetivo de máxima, en estos casi tres 
+            personas en todo el país.</p>
 
-años de trabajo ininterrumpidos la comunidad ha alcanzado otras metas que resultan igual de 
+            <p>
 
-importantes.</p>
+            Si bien todavía nos encontramos lejos de lograr el objetivo de máxima, en estos casi tres 
 
-<p>
+            años de trabajo ininterrumpidos la comunidad ha alcanzado otras metas que resultan igual de 
 
-Entre ellas se cuentan haber hecho visible el concepto de periodismo de datos entre colegas y 
+            importantes.</p>
 
-medios; el desarrollo y apoyo de este tipo de proyectos entre personas de la comunidad hacker 
+            <p>
 
-local; campañas de financiación a través de empresas y fundaciones; difusión del concepto 
+            Entre ellas se cuentan haber hecho visible el concepto de periodismo de datos entre colegas y 
 
-de software libre, datos abiertos y gobierno abierto; charlas y talleres sobre herramientas 
+            medios; el desarrollo y apoyo de este tipo de proyectos entre personas de la comunidad hacker 
 
-tecnológicas para periodistas y programadores y lo más importante de todo: la HHBA Media 
+            local; campañas de financiación a través de empresas y fundaciones; difusión del concepto 
 
-Party de 2012 y 2013.</p>
+            de software libre, datos abiertos y gobierno abierto; charlas y talleres sobre herramientas 
 
-<p>
+            tecnológicas para periodistas y programadores y lo más importante de todo: la HHBA Media 
 
-Esta mega feria gratuita de tres días, única en Latinoamérica, en sus dos ediciones reunió 
+            Party de 2012 y 2013.</p>
 
-en un mismo lugar (Ciudad Cultural Konex, CABA) a los principales equipos de noticias 
+            <img src="images/nota/hhba2013.jpg">
 
-interactivas de los grandes medios digitales (New York Times, The Guardian, Boston Globe, 
+            <p>
 
-ProPublica, NPR, Chicago Tribune) y a las más destacadas figuras y fundaciones (Mozilla 
+            Esta mega feria gratuita de tres días, única en Latinoamérica, en sus dos ediciones reunió 
 
-Fundation, Knight Foundation y el programa Knight-Mozilla OpenNews; ICFJ, FNPI, World Bank 
+            en un mismo lugar (Ciudad Cultural Konex, CABA) a los principales equipos de noticias 
 
-Institute y el GEN entre otros) que apoyan y desarrollan proyectos de innovación en medios de 
+            interactivas de los grandes medios digitales (New York Times, The Guardian, Boston Globe, 
 
-todo el mundo.</p>
+            ProPublica, NPR, Chicago Tribune) y a las más destacadas figuras y fundaciones (Mozilla 
 
-<p>
+            Fundation, Knight Foundation y el programa Knight-Mozilla OpenNews; ICFJ, FNPI, World Bank 
 
-El capítulo rosarino de HH comenzó su andar recién a comienzos de 2013 y ya cuenta con 
+            Institute y el GEN entre otros) que apoyan y desarrollan proyectos de innovación en medios de 
 
-diez meetups y 121 miembros activos entre periodistas, programadores, diseñadores y 
+            todo el mundo.</p>
 
-emprendedores tecnológicos. Desde el principio el objetivo fue establecer las condiciones 
+            <p>
 
-naturales para que se consolide una comunidad de trabajo colaborativo. Y que esto derive 
+            El capítulo rosarino de HH comenzó su andar recién a comienzos de 2013 y ya cuenta con 
 
-en equipos multidisciplinarios que permitan crear herramientas y plataformas libres con fines 
+            diez meetups y 121 miembros activos entre periodistas, programadores, diseñadores y 
 
-periodísticos; pero también unidades de negocios PYME que generen dividendos sobre la base 
+            emprendedores tecnológicos. Desde el principio el objetivo fue establecer las condiciones 
 
-de software no privativo y el acceso libre al conocimiento.</p>
+            naturales para que se consolide una comunidad de trabajo colaborativo. Y que esto derive 
 
-<p>
+            en equipos multidisciplinarios que permitan crear herramientas y plataformas libres con fines 
 
-La plataforma de mapeo con los homicidios dolosos que se cometieron en la ciudad durante el 
+            periodísticos; pero también unidades de negocios PYME que generen dividendos sobre la base 
 
-año 2013 es la consecuencia de una puesta en práctica de las ideas antes mencionadas y el 
+            de software no privativo y el acceso libre al conocimiento.</p>
 
-producto de un trabajo en conjunto entre el equipo de Policiales del diario La Capital y Hacks/
+            <img src="images/nota/hh2.jpg">
 
-Hackers Rosario (HHROS).</p>
+            <p>
 
-<p>
+            La plataforma de mapeo con los homicidios dolosos que se cometieron en la ciudad durante el 
 
-Sin el completo dataset que se aportó desde el diario hubiera sido imposible llevar adelante el 
+            año 2013 es la consecuencia de una puesta en práctica de las ideas antes mencionadas y el 
 
-trabajo de desarrollo. Ese material fue imprescindible ya que representa el corazón mismo de la 
+            producto de un trabajo en conjunto entre el equipo de Policiales del diario La Capital y Hacks/
 
-plataforma y el punto de partida para cualquier proyecto de este tipo. </p>
+            Hackers Rosario (HHROS).</p>
 
-<p>
+            <p>
 
-A continuación les contamos el paso a paso de cómo se realizó la plataforma y cuáles fueron 
+            Sin el completo dataset que se aportó desde el diario hubiera sido imposible llevar adelante el 
 
-las dificultades con las que tuvimos que lidiar a lo largo de todo el proceso.</p>
+            trabajo de desarrollo. Ese material fue imprescindible ya que representa el corazón mismo de la 
 
+            plataforma y el punto de partida para cualquier proyecto de este tipo. </p>
 
-<h3>Cómo lo hicimos</h3>
+            <p>
 
-<p>
+            A continuación les contamos el paso a paso de cómo se realizó la plataforma y cuáles fueron 
 
-Desde un punto de vista metodológico se decidió delimitar el mapeo de homicidios dolosos 
+            las dificultades con las que tuvimos que lidiar a lo largo de todo el proceso.</p>
 
-sólo a la ciudad de Rosario. De esta forma se dejó fuera a localidades como Villa Gobernador 
 
-Gálvez, Granadero Baigorria, Pérez, Ibarlucea y Funes. Esto dio como resultado que en el 
+            <h3>Cómo lo hicimos</h3>
 
-mapa sólo se referencien los 214 homicidios dolosos cometidos en el territorio de la ciudad y no 
+            <p>
 
-el total de 257 correspondiente al Departamento Rosario.</p>
+            Desde un punto de vista metodológico se decidió delimitar el mapeo de homicidios dolosos 
 
-<p>
+            sólo a la ciudad de Rosario. De esta forma se dejó fuera a localidades como Villa Gobernador 
 
-El objetivo de ésta decisión fue simplificar el trabajo de normalización y chequeo del dataset 
+            Gálvez, Granadero Baigorria, Pérez, Ibarlucea y Funes. Esto dio como resultado que en el 
 
-aportado por La Capital. De esta forma logramos acortar el tiempo de delimitación manual de 
+            mapa sólo se referencien los 214 homicidios dolosos cometidos en el territorio de la ciudad y no 
 
-comisarías y distritos de Rosario puesto que contábamos con un reducido equipo de personas 
+            el total de 257 correspondiente al Departamento Rosario.</p>
 
-en función de los días y horas de trabajo disponibles.</p>
+            <p>
 
-<p>
+            El objetivo de ésta decisión fue simplificar el trabajo de normalización y chequeo del dataset 
 
-Es importante destacar que el equipo de HHROS que llevó adelante la programación de la 
+            aportado por La Capital. De esta forma logramos acortar el tiempo de delimitación manual de 
 
-plataforma, su visualización, normalización y corroboración de datos, realizó estas tareas en su 
+            comisarías y distritos de Rosario puesto que contábamos con un reducido equipo de personas 
 
-tiempo libre. Por lo que la delimitación resultaba imprescindible para alcanzar el objetivo final. 
+            en función de los días y horas de trabajo disponibles.</p>
 
-En esta etapa fue determinante haber logrado detectar las fortalezas y debilidades del grupo ya 
+            <img src="images/nota/comisaria-distrito.jpg">
 
-que en proyectos de este tipo es muy común partir de objetivos desmedidamente ambiciosos 
+            <p>
 
-que luego pueden hacer peligrar el éxito de toda la empresa.
-</p>
+            Es importante destacar que el equipo de HHROS que llevó adelante la programación de la 
 
-<p>
-Puntualmente con respecto al dataset lo primero que se hizo fue quitar todos los homicidios 
+            plataforma, su visualización, normalización y corroboración de datos, realizó estas tareas en su 
 
-cometidos en las localidades ya mencionadas. De está forma quedaron sólo los cometidos en 
+            tiempo libre. Por lo que la delimitación resultaba imprescindible para alcanzar el objetivo final. 
 
-Rosario. Luego se buscó la noticia de cada asesinato a través del buscador y archivo digital 
+            En esta etapa fue determinante haber logrado detectar las fortalezas y debilidades del grupo ya 
 
-del diario, con un éxito del 89%. Esto indica una cobertura casi perfecta de los hechos de 
+            que en proyectos de este tipo es muy común partir de objetivos desmedidamente ambiciosos 
 
-sangre que se cometen en el Departamento Rosario y un registro de datos puntilloso y de lo 
+            que luego pueden hacer peligrar el éxito de toda la empresa.
+            </p>
 
-más completo por parte del equipo de Policiales del diario La Capital.</p>
+            <p>
+            Puntualmente con respecto al dataset lo primero que se hizo fue quitar todos los homicidios 
 
-<p>
+            cometidos en las localidades ya mencionadas. De está forma quedaron sólo los cometidos en 
 
-Los links a las noticias de las muertes sirvieron para contrastar información imprescindible para 
+            Rosario. Luego se buscó la noticia de cada asesinato a través del buscador y archivo digital 
 
-la georeferenciación que luego tendría cada hecho en el mapa. También fueron útiles para 
+            del diario, con un éxito del 89%. Esto indica una cobertura casi perfecta de los hechos de 
 
-corroborar edades, nombres completos, comisarías, juzgados y principalmente direcciones. 
+            sangre que se cometen en el Departamento Rosario y un registro de datos puntilloso y de lo 
 
-Todos datos e informaciones que queríamos que estuviesen presentes en la plataforma final.
+            más completo por parte del equipo de Policiales del diario La Capital.</p>
 
-Para evitar dolores de cabeza era necesario obtener direcciones precisas. Y el problema 
+            <img src="images/nota/dataset-3.jpg">
 
-era que un número importante referían a la intersección de dos calles (“Ezeiza y Filiberto”, 
+            <p>
 
-“Rueda y Pascual Rosas”, etc.), espacios recreativos (“Piletas del Saladillo”) o verdes 
+            Los links a las noticias de las muertes sirvieron para contrastar información imprescindible para 
 
-(“Parque Independencia”). Esto hacía imposible una localización precisa por lo que en un gran 
+            la georeferenciación que luego tendría cada hecho en el mapa. También fueron útiles para 
 
-número de casos fue necesario ir a la noticia y hacer una lectura rápida en busca de mayores 
+            corroborar edades, nombres completos, comisarías, juzgados y principalmente direcciones. 
 
-precisiones. Este trabajo artesanal permitió, en la mayoría de casos, una geolocalización 
+            Todos datos e informaciones que queríamos que estuviesen presentes en la plataforma final.
 
-exacta y en otros, una aproximada, de los crímenes.</p>
+            Para evitar dolores de cabeza era necesario obtener direcciones precisas. Y el problema 
 
-<p>
+            era que un número importante referían a la intersección de dos calles (“Ezeiza y Filiberto”, 
 
-Pese a estos recaudos hubo que agregar columnas de información al dataset original para 
+            “Rueda y Pascual Rosas”, etc.), espacios recreativos (“Piletas del Saladillo”) o verdes 
 
-lograr georeferenciar cada hecho sin problema. El excel original albergaba 8 columnas: número 
+            (“Parque Independencia”). Esto hacía imposible una localización precisa por lo que en un gran 
 
-del homicidio, fecha del deceso, nombre de la víctima, edad, dirección aproximada, tipo de 
+            número de casos fue necesario ir a la noticia y hacer una lectura rápida en busca de mayores 
 
-arma y motivo; comisaría y juzgado. Y se les sumó tres nuevas: dirección exacta; ciudad, 
+            precisiones. Este trabajo artesanal permitió, en la mayoría de casos, una geolocalización 
 
-provincia, país; y distrito. Con esto se subsano el problema de referenciación y se logró mapear 
+            exacta y en otros, una aproximada, de los crímenes.</p>
 
-los 214 homicidios dolosos. </p>
+            <img src="images/nota/dataset-direccionprecisa.jpg">
 
-<p>
+            <p>
 
-El mapa que usamos para la plataforma es una versión gratuita de CartoDB que permite 
+            Pese a estos recaudos hubo que agregar columnas de información al dataset original para 
 
-trabajar hasta 5 tablas o capas de información. Las tres principales corresponden a los distritos, 
+            lograr georeferenciar cada hecho sin problema. El excel original albergaba 8 columnas: número 
 
-comisarías y el propio dataset. Las dos restantes corresponden puntualmente al mapa. </p>
+            del homicidio, fecha del deceso, nombre de la víctima, edad, dirección aproximada, tipo de 
 
-<p>
+            arma y motivo; comisaría y juzgado. Y se les sumó tres nuevas: dirección exacta; ciudad, 
 
-La delimitación espacial de las 29 comisarías y los seis distritos administrativos en los que se 
+            provincia, país; y distrito. Con esto se subsano el problema de referenciación y se logró mapear 
 
-divide la ciudad, se realizaron de forma manual. La información de referencia que se usó para 
+            los 214 homicidios dolosos. </p>
 
-este fin se tomó del sitio oficial de la Municipalidad de Rosario. </p>
+            <img src="images/nota/dataset-direccionprecisa.jpg">
 
+            <p>
 
+            El mapa que usamos para la plataforma es una versión gratuita de CartoDB que permite 
 
-<h3>Los árboles detrás del bosque</h3>
+            trabajar hasta 5 tablas o capas de información. Las tres principales corresponden a los distritos, 
 
-<p>
+            comisarías y el propio dataset. Las dos restantes corresponden puntualmente al mapa. </p>
 
-Desde hace por lo menos dos años la noticia se repite a diario como un mantra: “Un joven de 
+            <p>
 
-16 años fue hallado muerto con dos disparos en el pecho y uno en la cabeza”, “...dos personas 
+            La delimitación espacial de las 29 comisarías y los seis distritos administrativos en los que se 
 
-arriba de una moto lo interceptaron camino a su casa y abrieron fuego sin mediar palabras”; 
+            divide la ciudad, se realizaron de forma manual. La información de referencia que se usó para 
 
-“la víctima de tan sólo 21 años fue ejecutada con un arma calibre 9 milímetros a plena luz 
+            este fin se tomó del sitio oficial de la Municipalidad de Rosario. </p>
 
-del día…”.</p>
 
-<p>
 
-Inclusive las características son a menudo bastante similares. Víctimas en edad de secundario 
+            <h3>Los árboles detrás del bosque</h3>
 
-o joven adulto en condiciones físicas óptimas para el trabajo. Asesinados con armas de fuego 
+            <p>
 
-calibre 9 mm, 11.45 y 22 a distancias cortas. Sólo en contadas ocasiones, él o los agresores, 
+            Desde hace por lo menos dos años la noticia se repite a diario como un mantra: “Un joven de 
 
-se hacen con las pertenencias de valor de la víctima. Los ataques se cometen sin importar hora 
+            16 años fue hallado muerto con dos disparos en el pecho y uno en la cabeza”, “...dos personas 
 
-o lugar aunque lo más común es que se sucedan en barrios pobres de la ciudad de Rosario y 
+            arriba de una moto lo interceptaron camino a su casa y abrieron fuego sin mediar palabras”; 
 
-sus alrededores. Y pareciera que todos se rigen con una misma regla: no suele haber disparos 
+            “la víctima de tan sólo 21 años fue ejecutada con un arma calibre 9 milímetros a plena luz 
 
-al azar o intimidatorios… se tira a matar. </p>
+            del día…”.</p>
 
-<p>
+            <p>
 
-Todos los días uno puede abrir la edición online de cualquier diario local y encontrarse con un 
+            Inclusive las características son a menudo bastante similares. Víctimas en edad de secundario 
 
-panorama como el que acaba de ser descripto. A tal punto es así que en los 365 días que tuvo 
+            o joven adulto en condiciones físicas óptimas para el trabajo. Asesinados con armas de fuego 
 
-el 2013 se asesinaron, en forma dolosa (con intención), a 214 personas sólo en la ciudad de 
+            calibre 9 mm, 11.45 y 22 a distancias cortas. Sólo en contadas ocasiones, él o los agresores, 
 
-Rosario (un promedio de 1,6 por día). En su mayoría hombres jóvenes, menores de 35 años, 
+            se hacen con las pertenencias de valor de la víctima. Los ataques se cometen sin importar hora 
 
-muertos por armas de fuego y sin otra motivación aparente que el sólo hecho de borrarlos de la 
+            o lugar aunque lo más común es que se sucedan en barrios pobres de la ciudad de Rosario y 
 
-faz de la tierra.</p>
+            sus alrededores. Y pareciera que todos se rigen con una misma regla: no suele haber disparos 
 
-<p>
+            al azar o intimidatorios… se tira a matar. </p>
 
-El espiral de violencia y muerte ha llegado a tal punto que los rosarinos prácticamente hemos 
+            <p>
 
-naturalizado el ritmo creciente de homicidios interanual que padece la ciudad. Las cifras en 
+            Todos los días uno puede abrir la edición online de cualquier diario local y encontrarse con un 
 
-esta materia son elocuentes: en 2011, en Rosario, asesinaron en forma dolosa a 130 personas. 
+            panorama como el que acaba de ser descripto. A tal punto es así que en los 365 días que tuvo 
 
-En 2012 el número ascendió a 154 (+15%) y en el 2013, como ya se dijo, trepó a 214 (+28%).
+            el 2013 se asesinaron, en forma dolosa (con intención), a 214 personas sólo en la ciudad de 
 
-Si bien el análisis cuantitativo de esta situación es valido y sirve para dimensionar el 
+            Rosario (un promedio de 1,6 por día). En su mayoría hombres jóvenes, menores de 35 años, 
 
-bosque —de hecho el fin en sí mismo de la plataforma fue alcanzar tal objetivo—, tiene como 
+            muertos por armas de fuego y sin otra motivación aparente que el sólo hecho de borrarlos de la 
 
-contrapartida que no permite observar con detalle algunos árboles que lo conforman. Y es en 
+            faz de la tierra.</p>
 
-este punto en el que nos gustaría detenernos y aportar otro tipo de reflexión a partir de las 
+            <p>
 
-cifras objetivas.</p>
+            El espiral de violencia y muerte ha llegado a tal punto que los rosarinos prácticamente hemos 
 
-<p>
+            naturalizado el ritmo creciente de homicidios interanual que padece la ciudad. Las cifras en 
 
-De los 214 homicidios dolosos que se cometieron en 2013, 30 corresponden a menores de 18 
+            esta materia son elocuentes: en 2011, en Rosario, asesinaron en forma dolosa a 130 personas. 
 
-años (14%). En su mayoría personas en edad de secundario: niños y adolescentes que van 
+            En 2012 el número ascendió a 154 (+15%) y en el 2013, como ya se dijo, trepó a 214 (+28%).
 
-de los 13 a los 17 años. Personas que se encontraban en su etapa de maduración, en tránsito 
+            Si bien el análisis cuantitativo de esta situación es valido y sirve para dimensionar el 
 
-hacia la adultez. Chicos a los que recién ahora les debería haber estado creciendo vello en 
+            bosque —de hecho el fin en sí mismo de la plataforma fue alcanzar tal objetivo—, tiene como 
 
-las piernas. En muchos casos con cuerpos aún en desarrollo y con—seguramente—varios a 
+            contrapartida que no permite observar con detalle algunos árboles que lo conforman. Y es en 
 
-las puteadas por problemas de acné propios de la edad. A prácticamente todos, la vida les fue 
+            este punto en el que nos gustaría detenernos y aportar otro tipo de reflexión a partir de las 
 
-extirpada del cuerpo a través de un eficiente y letal intermediario: una bala calibre 9 mm. 
+            cifras objetivas.</p>
 
-En tres de los 30 homicidios que involucran menores, el móvil está relacionado a un robo 
+            <p>
 
-o intento. Son los casos de Mia Valenzuela (4), asesinada de un mazazo en la vivienda 
+            De los 214 homicidios dolosos que se cometieron en 2013, 30 corresponden a menores de 18 
 
-familiar; Emanuel Ramos (17) muerto apuñalado al resistirse; y Gonzalo Bai (17), padre de 
+            años (14%). En su mayoría personas en edad de secundario: niños y adolescentes que van 
 
-dos criaturas, quien recibió cuatro disparos cuando intentaba robar un autoservicio en barrio 
+            de los 13 a los 17 años. Personas que se encontraban en su etapa de maduración, en tránsito 
 
-Belgrano. En ese atraco frustrado lo que se sí se alcanzó a robar Gonzalo fue la vida de 
+            hacia la adultez. Chicos a los que recién ahora les debería haber estado creciendo vello en 
 
-Romeo Traversa (86). El resto se completa con: motivos interpersonales (6), causa dudosa (6), 
+            las piernas. En muchos casos con cuerpos aún en desarrollo y con—seguramente—varios a 
 
-ajuste de cuentas (3), bala policial (4), enfrentamiento entre bandas (2), tiroteo (1), venganza 
+            las puteadas por problemas de acné propios de la edad. A prácticamente todos, la vida les fue 
 
-(1), discusión entre vecinos (1), riña (1), filicidio (1), frente de casa acribillado (1).
+            extirpada del cuerpo a través de un eficiente y letal intermediario: una bala calibre 9 mm. 
 
-En cuanto al total de homicidios dolosos en ocasión de robo en 2013, la suma da como 
+            En tres de los 30 homicidios que involucran menores, el móvil está relacionado a un robo 
 
-resultado 27. De los cuales 18 fueron con arma de fuego y el resto se dividen entre objeto 
+            o intento. Son los casos de Mia Valenzuela (4), asesinada de un mazazo en la vivienda 
 
-contundente (OC) y arma blanca (AB). Otro dato relevante es que la mayoría de los hechos 
+            familiar; Emanuel Ramos (17) muerto apuñalado al resistirse; y Gonzalo Bai (17), padre de 
 
-se dieron en zonas alejadas del domo o centro de la ciudad (3). Los puntos calientes fueron 
+            dos criaturas, quien recibió cuatro disparos cuando intentaba robar un autoservicio en barrio 
 
-barrios humildes de los distritos Oeste (9) y Sudoeste (6) y las víctimas personas pobres o de 
+            Belgrano. En ese atraco frustrado lo que se sí se alcanzó a robar Gonzalo fue la vida de 
 
-clase media baja. </p>
+            Romeo Traversa (86). El resto se completa con: motivos interpersonales (6), causa dudosa (6), 
 
-<p>
+            ajuste de cuentas (3), bala policial (4), enfrentamiento entre bandas (2), tiroteo (1), venganza 
 
-De todos los hechos policiales que cubrió el diario La Capital en el 2013 (89% del total), las 
+            (1), discusión entre vecinos (1), riña (1), filicidio (1), frente de casa acribillado (1).
 
-crónicas dan cuenta de 56 homicidios en los que se establece con claridad que los victimarios 
+            En cuanto al total de homicidios dolosos en ocasión de robo en 2013, la suma da como 
 
-dieron muerte a sus víctimas aplicando la modalidad de asesinato con arma de fuego desde arriba de una moto. 
+            resultado 27. De los cuales 18 fueron con arma de fuego y el resto se dividen entre objeto 
 
-</p>
+            contundente (OC) y arma blanca (AB). Otro dato relevante es que la mayoría de los hechos 
 
-<p>
+            se dieron en zonas alejadas del domo o centro de la ciudad (3). Los puntos calientes fueron 
 
-En la inmensa mayoría de los casos relacionados con menores, la muerte se produjo por arma 
+            barrios humildes de los distritos Oeste (9) y Sudoeste (6) y las víctimas personas pobres o de 
 
-de fuego: 25 sobre 30. Los cinco restantes se reparten entre OC (2), AB (2) y trauma grave (1). 
+            clase media baja. </p>
 
-Si retomamos el número total de homicidios (214), sin distinción de edades, vamos a observar 
+            <p>
 
-que 165 (77,1%) fueron cometidos con armas de fuego. Esto supone un acceso a dichas armas 
+            De todos los hechos policiales que cubrió el diario La Capital en el 2013 (89% del total), las 
 
-(por vía de la compra o alquiler) y su munición relativamente fácil para el victimario. Algo que 
+            crónicas dan cuenta de 56 homicidios en los que se establece con claridad que los victimarios 
 
-no pareciera ser común en el mercado legal de armamento para uso civil de Argentina.
+            dieron muerte a sus víctimas aplicando la modalidad de asesinato con arma de fuego desde arriba de una moto. 
 
-Actualmente si se quiere acceder a un arma de fuego por primera vez, el comprador deberá 
+            </p>
 
-sortear un abultado tramiterio burocrático a través del Renar que incluye: ser mayor de 21 
+            <p>
 
-años, presentarse con DNI, establecer un domicilio de guarda de la/s arma/s, no poseer 
+            En la inmensa mayoría de los casos relacionados con menores, la muerte se produjo por arma 
 
-antecedentes penales, acreditar medio de vida lícito (recibo de sueldo, monotributo, etc), 
+            de fuego: 25 sobre 30. Los cinco restantes se reparten entre OC (2), AB (2) y trauma grave (1). 
 
-certificado de aptitud psicofísico y dar cuenta de idoneidad en el manejo de armas de fuego. 
+            Si retomamos el número total de homicidios (214), sin distinción de edades, vamos a observar 
 
-Todo el proceso tiene un costo de $350 y una demora de entre 30 y 40 días para que 
+            que 165 (77,1%) fueron cometidos con armas de fuego. Esto supone un acceso a dichas armas 
 
-los papeles viajen al Renar en Buenos Aires, sean evaluados, aprobados—si es que son 
+            (por vía de la compra o alquiler) y su munición relativamente fácil para el victimario. Algo que 
 
-aprobados—y vuelvan a la armería desde donde se realizó la compra en forma de credencial 
+            no pareciera ser común en el mercado legal de armamento para uso civil de Argentina.
 
-de legítimo usuario. Una vez sorteado todo esto, el arma deberá quedar en guarda del 
+            Actualmente si se quiere acceder a un arma de fuego por primera vez, el comprador deberá 
 
-vendedor por otros dos meses y recién ahí el comprador puede llevarla a su casa. Luego para 
+            sortear un abultado tramiterio burocrático a través del Renar que incluye: ser mayor de 21 
 
-adquirir munición siempre deberá presentar su credencial habilitante.</p>
+            años, presentarse con DNI, establecer un domicilio de guarda de la/s arma/s, no poseer 
 
-<p>
+            antecedentes penales, acreditar medio de vida lícito (recibo de sueldo, monotributo, etc), 
 
-Cuesta trabajo imaginar que de los 165 homicidios dolosos que se cometieron en 2013, un 
+            certificado de aptitud psicofísico y dar cuenta de idoneidad en el manejo de armas de fuego. 
 
-porcentaje elevado hayan sido perpetrados por legítimos usuarios en posesión de armas y 
+            Todo el proceso tiene un costo de $350 y una demora de entre 30 y 40 días para que 
 
-munición registrada. Si hacemos un repaso por el dataset los únicos homicidios en los que 
+            los papeles viajen al Renar en Buenos Aires, sean evaluados, aprobados—si es que son 
 
-podemos certificar que hubo armas y munición legal son los 13 en donde actuaron fuerzas de 
+            aprobados—y vuelvan a la armería desde donde se realizó la compra en forma de credencial 
 
-seguridad y un caso de robo en el que el propietario del arma hizo entrega de la misma a la 
+            de legítimo usuario. Una vez sorteado todo esto, el arma deberá quedar en guarda del 
 
-policía tras repeler el atraco del que fue víctima. En total: 14 episodios de 165 (el 8,5%). 
+            vendedor por otros dos meses y recién ahí el comprador puede llevarla a su casa. Luego para 
 
-Esto lo que demuestra es que el negocio de venta y alquiler de armas y munición ilegal goza 
+            adquirir munición siempre deberá presentar su credencial habilitante.</p>
 
-de enorme salud y prosperidad en la ciudad de Rosario. Un dato a tener en cuenta por el 
+            <p>
 
-Ministerio de Seguridad de Santa Fe, el Estado Municipal y la Policía provincial.</p>
+            Cuesta trabajo imaginar que de los 165 homicidios dolosos que se cometieron en 2013, un 
 
+            porcentaje elevado hayan sido perpetrados por legítimos usuarios en posesión de armas y 
 
-<p>Todos estos datos y afirmaciones están a disposición del lector para ser descargados 
+            munición registrada. Si hacemos un repaso por el dataset los únicos homicidios en los que 
 
-chequeados y contrastados en el dataset que utilizamos para el desarrollo del Mapa de 
+            podemos certificar que hubo armas y munición legal son los 13 en donde actuaron fuerzas de 
 
-Homicidios Dolosos Rosario 2013. Lo mismo con el código fuente que desarrollamos para 
+            seguridad y un caso de robo en el que el propietario del arma hizo entrega de la misma a la 
 
-crear la plataforma. El mismo lo pueden forkear de GitHub y reutilizarlo en función de sus 
+            policía tras repeler el atraco del que fue víctima. En total: 14 episodios de 165 (el 8,5%). 
 
-proyectos.</p>
+            Esto lo que demuestra es que el negocio de venta y alquiler de armas y munición ilegal goza 
+
+            de enorme salud y prosperidad en la ciudad de Rosario. Un dato a tener en cuenta por el 
+
+            Ministerio de Seguridad de Santa Fe, el Estado Municipal y la Policía provincial.</p>
+
+
+            <p>Todos estos datos y afirmaciones están a disposición del lector para ser descargados 
+
+            chequeados y contrastados en el dataset que utilizamos para el desarrollo del Mapa de 
+
+            Homicidios Dolosos Rosario 2013. Lo mismo con el código fuente que desarrollamos para 
+
+            crear la plataforma. El mismo lo pueden forkear de GitHub y reutilizarlo en función de sus 
+
+            proyectos.</p>
+
+          </div>
 
         </div> <!-- main-padder -->
       </div> <!-- container -->
