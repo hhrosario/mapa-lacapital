@@ -473,7 +473,7 @@
                   d3map.layers['distritos']['svg'] = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-distritos");
                   d3map.layers['distritos']['g'] = d3map.layers['distritos']['svg'].append("g").attr("class", "leaflet-zoom-hide");
 
-                  d3.json("distritos.geojson", function(collection) {
+                  d3.json("distritos.json", function(collection) {
 
                     // Dibuja los puntos sobre el mapa de Leaflet con D3.js
                     var transform = d3.geo.transform({point: projectPoint});
