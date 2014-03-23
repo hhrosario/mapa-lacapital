@@ -393,34 +393,38 @@
 
                 });
 
-                // Agregar la capa SVG para las comisarías a Leaflet
-                mapaHomicidios.layers['comisarias']['svg'] = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-comisarias");
-                mapaHomicidios.layers['comisarias']['g'] = mapaHomicidios.layers['comisarias']['svg'].append("g").attr("class", "leaflet-zoom-hide");
+                function agregarCapaComisarias() {
+                  // Agregar la capa SVG para las comisarías a Leaflet
+                  mapaHomicidios.layers['comisarias']['svg'] = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-comisarias");
+                  mapaHomicidios.layers['comisarias']['g'] = mapaHomicidios.layers['comisarias']['svg'].append("g").attr("class", "leaflet-zoom-hide");
 
-                d3.json("comisarias.geojson", function(collection) {
+                  d3.json("comisarias.geojson", function(collection) {
 
-                  // Dibuja los puntos sobre el mapa de Leaflet con D3.js
-                  var transform = d3.geo.transform({point: projectPoint});
-                  
-                  mapaHomicidios.layers['comisarias']['collection'] = collection;
-                  mapaHomicidios.layers['comisarias']['path'] = d3.geo.path().projection(transform);
+                    // Dibuja los puntos sobre el mapa de Leaflet con D3.js
+                    var transform = d3.geo.transform({point: projectPoint});
+                    
+                    mapaHomicidios.layers['comisarias']['collection'] = collection;
+                    mapaHomicidios.layers['comisarias']['path'] = d3.geo.path().projection(transform);
 
-                  // Obtener los puntos y asignar una clase
-                  mapaHomicidios.layers['comisarias']['features'] = mapaHomicidios.layers['comisarias']['g'].selectAll("path")
-                    .data(collection.features)
-                    .enter()
-                    .append("path")
-                    .attr("class", "area-comisaria");
+                    // Obtener los puntos y asignar una clase
+                    mapaHomicidios.layers['comisarias']['features'] = mapaHomicidios.layers['comisarias']['g'].selectAll("path")
+                      .data(collection.features)
+                      .enter()
+                      .append("path")
+                      .attr("class", "area-comisaria");
 
-                  // Use Leaflet to implement a D3 geometric transformation.
-                  function projectPoint(x, y) {
-                    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                    this.stream.point(point.x, point.y);
-                  }
+                    // Use Leaflet to implement a D3 geometric transformation.
+                    function projectPoint(x, y) {
+                      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+                      this.stream.point(point.x, point.y);
+                    }
 
-                  map.on("viewreset", resetCapasSVG);
+                    map.on("viewreset", resetCapasSVG);
 
-                });
+                  });
+                }
+
+                agregarCapaComisarias();
 
                 // Reposition the SVG to cover the features.
                 function resetCapasSVG() {
