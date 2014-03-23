@@ -425,10 +425,10 @@
                 // Reposition the SVG to cover the features.
                 function resetCapasSVG() {
 
-                  mapaHomicidios.boundsComis = mapaHomicidios.layers['comisarias']['path'].bounds(mapaHomicidios.layers['comisarias']['collection']);
+                  mapaHomicidios.layers['comisarias']['bounds'] = mapaHomicidios.layers['comisarias']['path'].bounds(mapaHomicidios.layers['comisarias']['collection']);
 
-                  var topLeft = mapaHomicidios.boundsComis[0],
-                      bottomRight = mapaHomicidios.boundsComis[1];
+                  var topLeft = mapaHomicidios.layers['comisarias']['bounds'][0],
+                      bottomRight = mapaHomicidios.layers['comisarias']['bounds'][1];
 
                   mapaHomicidios.layers['comisarias']['svg'].attr("width", bottomRight[0] - topLeft[0])
                     .attr("height", bottomRight[1] - topLeft[1])
@@ -443,7 +443,7 @@
 
                     mapaHomicidios.boundsPuntos = mapaHomicidios.pathPuntos.bounds(mapaHomicidios.collectionPuntos);
                     var topLeft = mapaHomicidios.boundsPuntos[0],
-                        bottomRight = mapaHomicidios.boundsComis[1];
+                        bottomRight = mapaHomicidios.layers['comisarias']['bounds'][1];
 
                     svg.attr("width", bottomRight[0] - topLeft[0])
                       .attr("height", bottomRight[1] - topLeft[1])
