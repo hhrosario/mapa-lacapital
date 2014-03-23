@@ -38,7 +38,7 @@ html {
 }
 
 #scroll-filtros #comisarias-togglers {
-  height: 600px;
+  height: 400px;
 }
 
 .mapa-y-filtros {
@@ -149,16 +149,16 @@ svg {
   -webkit-transition: all .2s;
   -moz-transition: all .2s;
   visibility: hidden;
-  stroke: #ee0077;
+  stroke: #5e4108;
   stroke-width: 2;
   cursor: pointer;
-  fill: #FCC2DE;
-  opacity: 0.5;
+  fill: #f9be27;
+  opacity: 0.3;
 }
 
 .area-distrito:hover {
-  opacity: 0.8;
-  fill: #F55D97;
+  opacity: 0.6;
+  fill: #f9be27;
 }
 
 .area-distrito.selected { visibility: visible; }
