@@ -144,6 +144,25 @@ svg {
 
 .area-comisaria.selected { visibility: visible; }
 
+.area-distrito {
+  transition: all .2s;
+  -webkit-transition: all .2s;
+  -moz-transition: all .2s;
+  visibility: hidden;
+  stroke: #ee0077;
+  stroke-width: 2;
+  cursor: pointer;
+  fill: #FCC2DE;
+  opacity: 0.5;
+}
+
+.area-distrito:hover {
+  opacity: 0.8;
+  fill: #F55D97;
+}
+
+.area-distrito.selected { visibility: visible; }
+
 .circle {
   visibility: hidden;
   transition: all .2s;
