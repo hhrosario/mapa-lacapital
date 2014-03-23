@@ -387,9 +387,9 @@
                   zoomAnimation: false
                 });
 
-                L.tileLayer('http://{s}.tiles.mapbox.com/v3/hhrosario.map-wygexzoy/{z}/{x}/{y}.png', {
-                  attribution: 'OpenStreetMaps',
-                  maxZoom: 17
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 17
                 }).addTo(map);
 
                 cartodb.createLayer(map, 'http://hhrosario.cartodb.com/api/v2/viz/d058deb0-6dcc-11e3-bc71-b7b26ac0527a/viz.json', function(layer) {
