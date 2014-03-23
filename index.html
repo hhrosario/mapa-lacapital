@@ -27,14 +27,13 @@
 
     <script src="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 
-    <script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+
+    <!--<script src="http://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />-->
   
     <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.css" />
-
-    <!--[if lte IE 8]>
-    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
-    <![endif]-->
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -392,71 +391,61 @@
                     maxZoom: 17
                 }).addTo(map);
 
-                cartodb.createLayer(map, 'http://hhrosario.cartodb.com/api/v2/viz/d058deb0-6dcc-11e3-bc71-b7b26ac0527a/viz.json', function(layer) {
+                /*
+                layer.show();
+                var layerDistritos = layer.createSubLayer({
+                 sql: 'SELECT * FROM distritos',
+                 cartocss: "#distritos { polygon-fill: orange; polygon-opacity: 0.2; line-width: 2; line-color: #a82; line-opacity: 1; }",
+                 interactivity: "cartodb_id, name"
+                });
+                layerDistritos.hide();
 
-                   layer.show();
-                   var layerDistritos = layer.createSubLayer({
-                     sql: 'SELECT * FROM distritos',
-                     cartocss: "#distritos { polygon-fill: orange; polygon-opacity: 0.2; line-width: 2; line-color: #a82; line-opacity: 1; }",
-                     interactivity: "cartodb_id, name"
-                   });
-                   layerDistritos.hide();
+                layerDistritos.setInteraction(true);
+                layerDistritos.on('featureClick', function(e, latlng, pos, data, subLayerIndex) {
+                $("#sidebar-padder").html(data.name);
+                });*/
 
-                   layerDistritos.setInteraction(true);
-                   layerDistritos.on('featureClick', function(e, latlng, pos, data, subLayerIndex) {
-                    $("#sidebar-padder").html(data.name);
-                   });
+                $("#distritos-togglers button").on("click", function() {
 
-                   $("#distritos-togglers button").on("click", function() {
+                  mapaHomicidios.stop();
 
-                    mapaHomicidios.stop();
+                  var seleccionados = [];
+                  if($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                  } else {
+                    $(this).addClass("active");
+                  }
 
-                     var seleccionados = [];
-                     if($(this).hasClass("active")) {
-                      $(this).removeClass("active");
-                      } else {
-                      $(this).addClass("active");
-                     }
+                  $("#distritos-togglers button").each(function() {
+                    if ($(this).hasClass("active")) {
+                      seleccionados.push($(this).data("id"));
+                    }
+                  });
 
-                     $("#distritos-togglers button").each(function() {
-                      if ($(this).hasClass("active")) {
-                        seleccionados.push($(this).data("id"));
-                      }
-                     });
+                });
 
-                     if (seleccionados.length > 0) {
-                        layerDistritos.setSQL("SELECT * FROM distritos WHERE cartodb_id IN (" + seleccionados.join(", ") + ")");
-                        layerDistritos.show();
-                     } else {
-                        layerDistritos.hide();
-                     }
+                $("#comisarias-togglers button").on("click", function() {
 
-                   });
+                  mapaHomicidios.stop();
 
-                   $("#comisarias-togglers button").on("click", function() {
+                  var seleccionados = [];
+                  if($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                  } else {
+                    $(this).addClass("active");
+                  }
 
-                    mapaHomicidios.stop();
+                  $("#comisarias-togglers button").each(function() {
+                    if ($(this).hasClass("active")) {
+                      seleccionados.push($(this).data("id"));
+                    }
+                  });
 
-                     var seleccionados = [];
-                     if($(this).hasClass("active")) {
-                      $(this).removeClass("active");
-                      } else {
-                      $(this).addClass("active");
-                     }
+                  mapaHomicidios.mostrarPuntosFiltrados();
+                  mapaHomicidios.actualizarTextoFiltros();
 
-                     $("#comisarias-togglers button").each(function() {
-                      if ($(this).hasClass("active")) {
-                        seleccionados.push($(this).data("id"));
-                      }
-                     });
+                });
 
-                    mapaHomicidios.mostrarPuntosFiltrados();
-                    mapaHomicidios.actualizarTextoFiltros();
-
-                   });
-
-                }).addTo(map);
-                
                 // Agregar la capa SVG para las comisarías a Leaflet
                 var svgComis = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-comisarias"),
                     gComis = svgComis.append("g").attr("class", "leaflet-zoom-hide");
