@@ -1,3 +1,9 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+
+* {
+  font-family: "Montserrat";
+}
+
 body {
   background: #ddd url(../images/grid.png);
   height: 100%;
@@ -25,8 +31,7 @@ html {
 }
 
 .main-padder {
-  padding: 30px;
-  background: white;
+  background: #222;
 }
 
 .container.with-navbar {
@@ -51,8 +56,9 @@ html {
 }
 
 .titulo-color {
-  color: #09A1ED;
+  color: orange;
   font-weight: 400;
+  font-size: 12pt;
 }
 
 @media (min-width: 768px) {
@@ -173,25 +179,35 @@ svg {
   stroke-width: 2;
   cursor: pointer;
   fill: #D91C1C;
-
+  box-shadow: 0 0 10px red;
 }
 .circle.selected:hover {
-  opacity: 0.9;
+  opacity: 1;
   fill: #F0DC00;
   stroke: #111;
+  box-shadow: 0 0 10px red;
 }
-.circle.selected { opacity: 0.6; visibility: visible; }
+.circle.selected { opacity: 1; visibility: visible; }
 
 #timeline { text-align: center }
 
-.filtros div { margin-bottom: 5px; }
+.filtros {
+  position: fixed;
+  height: 100%;
+  left: 0;
+  width: 300px;
+  z-index: 99999;
+  background: rgba(0,0,0,.8);
+  top: 0;
+  padding: 30px;
+}
 
 .filtros button {
   display: block;
   width: 100%;
   background: white;
   border: 1px solid #ddd;
-  font-size: 9pt;
+  font-size: 11pt;
 }
 
 .filtros h5:first-child {
@@ -213,13 +229,15 @@ svg {
 
 .autoplay-wrapper {
   position: absolute;
-  top: 0px;
-  right: 15px;
+  top: 20px;
+  right: 20px;
 }
 
 #autoplay {
-  font-size: 10pt;
-  padding: 6px 12px;
+  height: 60px;
+  padding: 0 30px;
+  font-size: 14pt;
+  text-shadow: 0 0 10px white;
 }
 
 /* Estilos para D3 */ 
@@ -235,4 +253,67 @@ svg {
   fill: #777 !important;
   stroke: #444 !important;
   opacity: .7 !important;
+}
+
+.distritos-row {
+  display: table;
+  border-collapse: collapse !important;
+  width: 100%;
+  margin: 0 !important;
+  border: none;
+}
+.distritos-row button {
+  border: none;
+  display: table-cell;
+  border-collapse: collapse !important;
+  width: 33%;
+  margin: 0;
+  height: 40px;
+  background: rgba(128,128,128,.8);
+  color: white;
+}
+
+#comisarias-togglers button {
+  width: 33%;
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  background: rgba(128,128,128,.8);
+  color: white;
+  border: none;
+}
+#comisarias-togglers button.active {
+  background: none repeat scroll 0% 0% #29527A;
+  color: white;
+}
+
+.top-bar-wrapper {
+  position: fixed;
+  top: 0;
+  height: 60px;
+  left: 0;
+  padding-left: 300px;
+  width: 100%;
+  z-index: 999;
+}
+
+.bottom-bar-wrapper {
+  position: fixed;
+  bottom: 0;
+  height: 90px;
+  left: 0;
+  padding-left: 300px;
+  width: 100%;
+  z-index: 999;
+}
+
+.bottom-bar {
+  background: rgba(0,0,0,.9);
+}
+
+
+.top-bar {
+  padding: 20px;
+  color: #fafafa; 
+  background: rgba(0,0,0,.9);
 }
