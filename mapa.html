@@ -56,22 +56,16 @@
           <div class="row">
 
               <div class="filtros">
-                <h5 class="titulo-color">Filtros <small>- Click para activar</small></h5>
-                <button id="limpiar-filtros" class="btn btn-xs btn-block"><i class="fa fa-undo"></i> Limpiar filtros</button>
                 <div id="scroll-filtros">
                   
                   <h6>Distritos</h6>
                   <div id="distritos-togglers">
-                    <div class="distritos-row">
-                      <button data-id="7" type="button">Sur</button>
-                      <button data-id="4" type="button">Norte</button>
-                      <button data-id="6" type="button">Oeste</button>
-                    </div>
-                    <div class="distritos-row">
+                      <button data-id="7" type="button">S</button>
+                      <button data-id="4" type="button">N</button>
+                      <button data-id="6" type="button">O</button>
                       <button data-id="3" type="button">Centro</button>
-                      <button data-id="5" type="button">Noroeste</button>
-                      <button data-id="8" type="button">Sudoeste</button>
-                    </div>
+                      <button data-id="5" type="button">NO</button>
+                      <button data-id="8" type="button">SO</button>
                   </div>
                   
                   <h6>Comisarías</h6>
@@ -112,36 +106,36 @@
               <div class="top-bar-wrapper">
                 <div class="top-bar">
 
-                  <div class="autoplay-wrapper">
-                    <button id="autoplay" title="Animar el rango de fechas" class="btn btn-primary"><i class="fa fa-play"></i> Reproducir</button><br>
-                  </div>
-
-                  <h5 class="titulo-color">Mapa <small>- Hacé click en los puntos para más detalles.</small></h5>
-
-                  <div>
-                    <h4><span id="filtros-fechadesde">16 de Junio</span> <small>al</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small>-</small> <span id="cantidad-puntos"></span> <small>homicidios</small> <small>-</small> <span id="porcentaje">55</span>% <small>del total</small></h4>
-                    <h5 id="textoFiltros"></h5>
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="texto-animado">
+                          <h4><span id="filtros-fechadesde">16 de Junio</span> <small>al</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small>-</small> <span id="cantidad-puntos"></span> <small>homicidios</small> <small>-</small> <span id="porcentaje">55</span>% <small>del total</small></h4>
+                          <h5 id="textoFiltros"></h5>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div id="timeline"></div>
+                      </div>
+                    </div>
                   </div>
 
                 </div>
               </div>
 
-              <div id='map' data-source="mapa.json"></div>
+              <div class="autoplay-wrapper">
+                <button id="autoplay" title="Animar el rango de fechas" class="btn btn-primary"><i class="fa fa-play"></i> Reproducir</button>
+              </div>
+
+              <div id="map-wrapper">
+                <div id='map' data-source="mapa.json"></div>
+              </div>
              
-             <div id="sidebar">
+              <div id="sidebar">
                 <img src="images/close.png" id="cerrar-sidebar">
                 <div id="sidebar-padder"></div>
-             </div>
-
-             <div class="bottom-bar-wrapper">
-                <div class="bottom-bar">
-                  
-                  <div id="timeline"></div>
-                  <h5 class="titulo-color">Línea de Tiempo <small>- Seleccioná un área "pintando" en la línea del tiempo para filtrar por fecha, o arrastrando los extremos grises.</small></h5>
-                </div>
               </div>
 
-            </div>
           </div>
 
           <script type="text/html" id="sideTemplate">
@@ -401,10 +395,12 @@
                   zoomAnimation: false
                 });
 
-                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                L.tileLayer('https://api.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGhyb3NhcmlvIiwiYSI6IjY2MjA4ZjNjNDE0OWM3ZWQ2OTNhM2VkZDcwY2UzOTg0In0.zLs4d4FZqurL9p4jUfjm_A').addTo(map);
+
+                /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                     maxZoom: 17
-                }).addTo(map);
+                }).addTo(map);*/
 
                 $("#distritos-togglers button").on("click", function() {
 
@@ -579,6 +575,7 @@
                       
                   d3map.collectionPuntos = collection;
                   d3map.pathPuntos = d3.geo.path().projection(transform).pointRadius(function (d) { 
+                    console.log(d);
                     return 10; // TODO: Implementar radio según zoom del mapa
                   });
 
@@ -587,7 +584,7 @@
                     .data(collection.features)
                     .enter()
                     .append("path")
-                    .attr("class", "circle");
+                    .attr("class", "circle")
                   
                   // Listener para el click en un punto del mapa
                   d3map.featurePuntos.on("click", function (d, i) {
@@ -635,9 +632,7 @@
                 }
 
               function timeseries_chart() {
-                  var margin = { top: 20, right: 20, bottom: 20, left: 20 },
-                      width = 610,
-                      height = 40;
+                  var width = 400, height = 65;
 
                   var x = d3.time.scale()
                         .domain([d3map.fechaInicio, d3map.fechaFin])
@@ -666,10 +661,9 @@
                           y.range([height, 0]);
 
                           var series = d3.select(this).append("svg").attr("id", "mapa-timeseries")
-                                  .attr("width", width + margin.left + margin.right)
-                                  .attr("height", height + margin.top + margin.bottom)
+                                  .attr("width", width)
+                                  .attr("height", height)
                                   .append("g").attr("id", "date-brush")
-                                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                           var x_axis = series.append("g")
                             .attr("class", "x axis")
@@ -691,7 +685,7 @@
                             .call(d3map.brush)
                             .selectAll("rect")
                             .attr("height", height)
-                            .style("fill", '#ffee44')
+                            .style("fill", '#ccc')
                             .attr("opacity", 0.6);
 
                           x.domain(d3.extent(d, get_x));
