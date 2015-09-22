@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="ico/favicon.png">
+    <link rel="shortcut icon" href="icon/favicon.png">
 
     <title>Mapa</title>
 
@@ -14,6 +14,8 @@
 
     <link href="vendor/bootswatch/bootstrap.min.css" rel="stylesheet">
     
+    <link href="fonts/fonts.css" rel="stylesheet">
+
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
     
@@ -27,6 +29,11 @@
     <script src="vendor/jquery-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src="vendor/leaflet-heat/leaflet-heat.js"></script>
+
+	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+
+
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
   
     <link rel="stylesheet" href="vendor/leaflet-zoomslider/L.Control.Zoomslider.css" />
@@ -43,9 +50,39 @@
     <link href="css/mapa.css" rel="stylesheet">
     <link href="css/sticky-footer.css" rel="stylesheet">
 
+
+    <!-- Icon attributions -->
+
+    <!--
+
+    Gun by Edward Boatman from the Noun Project
+    Map Marker by John Kappa from the Noun Project
+    Grave by Piger from the Noun Project
+    Calendar by Edward Boatman from the Noun Project
+    Newspaper by Rémy Médard from the Noun Project
+
+    -->
   </head>
 
   <body>
+
+    <div id="overlay">
+
+      <div id="sidebar">
+        <div id="sidebar-padder"></div>
+        <button id="cerrar-sidebar">Cerrar</button>
+      </div>
+
+    </div>
+
+    <div class="top-right">
+      <div class="fly">
+        Mapa de
+        Homicidios
+        Rosario
+        <small>2013-2014</small>
+      </div>
+    </div>
 
     <div id="wrap">
 
@@ -55,107 +92,131 @@
 
           <div class="row">
 
-              <div class="filtros">
-                <div id="scroll-filtros">
-                  
-                  <h6>Distritos</h6>
-                  <div id="distritos-togglers">
-                      <button data-id="7" type="button">S</button>
-                      <button data-id="4" type="button">N</button>
-                      <button data-id="6" type="button">O</button>
-                      <button data-id="3" type="button">Centro</button>
-                      <button data-id="5" type="button">NO</button>
-                      <button data-id="8" type="button">SO</button>
-                  </div>
-                  
-                  <h6>Comisarías</h6>
-                  <div id="comisarias-togglers">
-                    <button data-id="28" type="button">1</button>
-                    <button data-id="20" type="button">2</button>
-                    <button data-id="13" type="button">Sub&nbsp;2</button>
-                    <button data-id="31" type="button">3</button>
-                    <button data-id="29" type="button">4</button>
-                    <button data-id="15" type="button">5</button>
-                    <button data-id="8" type="button">6</button>
-                    <button data-id="30" type="button">7</button>
-                    <button data-id="10" type="button">8</button>
-                    <button data-id="23" type="button">10</button>
-                    <button data-id="14" type="button">11</button>
-                    <button data-id="6" type="button">12</button>
-                    <button data-id="3" type="button">13</button>
-                    <button data-id="5" type="button">14</button>
-                    <button data-id="16" type="button">15</button>
-                    <button data-id="21" type="button">16</button>
-                    <button data-id="24" type="button">17</button>
-                    <button data-id="7" type="button">18</button>
-                    <button data-id="4" type="button">19</button>
-                    <button data-id="11" type="button">Sub&nbsp;19</button>
-                    <button data-id="18" type="button">20</button>
-                    <button data-id="22" type="button">Sub&nbsp;20</button>
-                    <button data-id="12" type="button">21</button>
-                    <button data-id="17" type="button">Sub&nbsp;21</button>
-                    <button data-id="25" type="button">Sub&nbsp;22</button>
-                    <button data-id="19" type="button">Sub&nbsp;24</button>
-                    <button data-id="26" type="button">30</button>
-                    <button data-id="27" type="button">32</button>
-                    <button data-id="9" type="button">33</button>
-                  </div>
-                </div>
-              </div>
             <div class="col-sm-12 mapa-y-filtros">
-              <div class="top-bar-wrapper">
-                <div class="top-bar">
+              <div class="bottom-bar-wrapper">
+                <div class="bottom-bar">
+
+                  <div class="extra-actions">
+
+                    <button class="filters-toggle"><span>Ocultar</span> <i class="fa fa-chevron-down"></i></button>
+                    
+                    <button id="autoplay" title="Animar el rango de fechas" class="btn btn-primary"><i class="fa fa-play"></i> Reproducir</button>
+
+                    <button class="toggle-heatmap">Mostrar mapa de calor</button>
+
+                  </div>
 
                   <div class="container-fluid">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="texto-animado">
-                          <h4><span id="filtros-fechadesde">16 de Junio</span> <small>al</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small>-</small> <span id="cantidad-puntos"></span> <small>homicidios</small> <small>-</small> <span id="porcentaje">55</span>% <small>del total</small></h4>
-                          <h5 id="textoFiltros"></h5>
+
+                    <div class="bottom-left">
+                      <!-- Filtros -->
+
+                      <div class="filtros">
+
+                        <div class="col-distritos">
+                          <h6>Distritos</h6>
+                          <div id="distritos-togglers">
+                            <div class="distritos-row">
+                              <button data-id="5" type="button">Noroeste</button>
+                              <button data-id="4" type="button">Norte</button>
+                            </div>
+                            <div class="distritos-row">
+                              <button data-id="6" type="button">Oeste</button>
+                              <button data-id="3" type="button">Centro</button>
+                            </div>
+                            <div class="distritos-row">
+                              <button data-id="8" type="button">Sudoeste</button>
+                              <button data-id="7" type="button">Sur</button>
+                            </div>
+                          </div>
                         </div>
+                        
+                        <div class="col-comisarias">
+                          <h6><span>Comisarías</span>
+                          <button id="limpiar-filtros" class="btn btn-xs btn-block"><i class="fa fa-undo"></i> Limpiar filtros</button>
+
+                          </h6>
+                          <div id="comisarias-togglers">
+                            <button data-id="28" type="button">1</button>
+                            <button data-id="20" type="button">2</button>
+                            <button data-id="13" type="button">Sub&nbsp;2</button>
+                            <button data-id="31" type="button">3</button>
+                            <button data-id="29" type="button">4</button>
+                            <button data-id="15" type="button">5</button>
+                            <button data-id="8" type="button">6</button>
+                            <button data-id="30" type="button">7</button>
+                            <button data-id="10" type="button">8</button>
+                            <button data-id="23" type="button">10</button>
+                            <button data-id="14" type="button">11</button>
+                            <button data-id="6" type="button">12</button>
+                            <button data-id="3" type="button">13</button>
+                            <button data-id="5" type="button">14</button>
+                            <button data-id="16" type="button">15</button>
+                            <button data-id="21" type="button">16</button>
+                            <button data-id="24" type="button">17</button>
+                            <button data-id="7" type="button">18</button>
+                            <button data-id="4" type="button">19</button>
+                            <button data-id="11" type="button">Sub&nbsp;19</button>
+                            <button data-id="18" type="button">20</button>
+                            <button data-id="22" type="button">Sub&nbsp;20</button>
+                            <button data-id="12" type="button">21</button>
+                            <button data-id="17" type="button">Sub&nbsp;21</button>
+                            <button data-id="25" type="button">Sub&nbsp;22</button>
+                            <button data-id="19" type="button">Sub&nbsp;24</button>
+                            <button data-id="26" type="button">30</button>
+                            <button data-id="27" type="button">32</button>
+                            <button data-id="9" type="button">33</button>
+                          </div>
+
+                        </div>
+
                       </div>
-                      <div class="col-md-6">
-                        <div id="timeline"></div>
-                      </div>
+
                     </div>
+                    <div class="bottom-right">
+
+                      <div class="texto-animado">
+                        <h4><small>Entre el</small> <span id="filtros-fechadesde">16 de Junio</span> <small>y el</small> <span id="filtros-fechahasta">23 de Noviembre</span> <small> de 2013 se cometieron </small><span id="cantidad-puntos"></span> <small>homicidios</small><small><span id="texto-comisarias"></span>, que representan un </small><span id="porcentaje">55</span>% <small>del total.</small></h4>
+                      </div>
+
+                      <div id="timeline"></div>
+
+                    </div>
+
+
                   </div>
 
                 </div>
-              </div>
-
-              <div class="autoplay-wrapper">
-                <button id="autoplay" title="Animar el rango de fechas" class="btn btn-primary"><i class="fa fa-play"></i> Reproducir</button>
               </div>
 
               <div id="map-wrapper">
                 <div id='map' data-source="mapa.json"></div>
               </div>
              
-              <div id="sidebar">
-                <img src="images/close.png" id="cerrar-sidebar">
-                <div id="sidebar-padder"></div>
-              </div>
-
           </div>
 
           <script type="text/html" id="sideTemplate">
-              <h4><img src="images/cruz.png" style="height: 16px"> <%- victimas %></h4>
-              <h5><img src="images/fecha.png" style="height: 16px"> <%- fecha %></h5>
-              <h5><img src="images/map-pin.png" style="height: 16px"> <%- direccion %></h5>
-              <h5><img src="images/comisaria.png" style="height: 16px"> <%- comisaria %></h5>
-              <p><img src="images/arma.png" style="height: 16px"> <%- resumen %></p>
-              <a href="<%- link %>" target="_blank"><i class="fa fa-external-link"></i> Nota en LaCapital.com.ar</a>
-              <div class="alert alert-info">
-                Leyenda:<br><br>
-                AF : Arma de fuego<br>
-                AB : Arma blanca<br>
-                OC : Objeto contundente
+              <h4><img src="images/grave.svg" style="height: 30px"> <%- victimas %></h4>
+              <p><img src="images/calendar.svg" style="height: 30px"> <%- fecha %></p>
+              <p><img src="images/mapmarker.svg" style="height: 30px"> <%- direccion %></p>
+              <p><img src="images/policestation.svg" style="height: 30px"> <%- comisaria %></p>
+              <p><img src="images/gun.svg" style="height: 30px"> <%- resumen %></p>
+              <div class="leyenda">
+                AF: Arma de fuego<br>
+                AB: Arma blanca<br>
+                OC: Objeto contundente
               </div>
+              <p><img src="images/newspaper.svg" style="height: 30px">
+                <a href="<%- link %>" target="_blank">
+                  lacapital.com.ar
+                </a>
+              </p>
           </script>
           
           <script type="text/javascript">
 
-            nro_comisaria = {
+            // Hardcoded for now, is not on the dataset.
+            policeStationCode = {
               "28": "1",
               "20": "2",
               "13": "sub2",
@@ -187,183 +248,736 @@
               "9": "33"
             }
 
-            moment.lang("es");
+            function homicideMap() {
+
+            	var me = this;
+
+              // Date range
+              this.startDate = new Date(2013, 0, 1, 0, 0, 0, 0);
+              this.endDate = new Date(2013, 11, 31, 23, 59, 59, 0);
+
+              // Autoplay settings
+              this.cursorAutoPlay = moment(this.startDate).add('days', 1).toDate();
+              this.enAutoPlay = false;
+
+	            this.cantidadPuntos = 0;
+
+              me.sideBarTemplate = document.getElementById("sideTemplate").text;
+
+              // Setting some layer keys
+	            this.layers = {
+	              "comisarias": [],
+	              "distritos": []
+	            };
+
+              this.setupMap = function() {
+
+                me.map = new L.Map('map', {
+                  zoomControl: false,
+                  center: [-32.9598, -60.6423],
+                  zoom: 13,
+                  zoomAnimation: false
+                });
+
+                L.tileLayer('https://a.tiles.mapbox.com/v4/hhrosario.nfmnc345/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGhyb3NhcmlvIiwiYSI6ImNpZXEyeTF0dzAwOHZzbWx6Nm5icTB3YTkifQ.dGPk3ApW6wcq3VEujMMM2A').addTo(me.map);
+
+              }
+
+            	this.init = function() {
+		            moment.lang("es");
+                me.setupMap();
+                me.loadLayers(["comisarias", "distritos"], function() {
+                  me.agregarCapaPuntos();
+                  me.resetCapasSVG();
+                  me.addDOMListeners();
+                });
+            	}
+
+	            this.log = function(msg, debugLevel) {
+	              var debugLevelValue = {
+	                "info": 1,
+	                "warning": 2,
+	                "all": 3
+	              }
+	              if (debugLevelValue[DEBUG_LEVEL] >= debugLevelValue[debugLevel]) {
+	                //console.log(msg);
+	              }
+	            }
+
+	            this.autoplay = function() {
+
+	              me.limpiarFiltros();
+	              me.enAutoPlay = true;
+
+	              me.cursorAutoPlay = me.startDate;
+
+	              $("#autoplay").off("click");
+	              $("#autoplay").html("<i class='fa fa-stop'></i> Detener");
+	              $("#autoplay").on("click", function() {
+	                me.stop();
+	              })
+
+	              me.autoPlayInterval = setInterval(
+	                function() {
+	                  me.cursorAutoPlay = moment(me.cursorAutoPlay).add('days', 1).toDate();
+
+	                  if (me.cursorAutoPlay > me.endDate) {
+	                    me.stop();
+	                    return;
+	                  }
+
+	                  me.brush.extent([me.startDate, me.cursorAutoPlay]);
+	                  d3.select('.brush').call(me.brush);
+	                  me.mostrarPuntosFiltrados();
+	                  me.actualizarTextoFiltros();
+	                  var s = me.brush.extent();
+	                  $("#filtros-fechadesde").html(moment(s[0]).format("D [de] MMMM"));
+	                  $("#filtros-fechahasta").html(moment(s[1]).format("D [de] MMMM"));
+
+	                }
+	                , 25
+	              );
+	            }
+
+	            me.stop = function() {
+	              if (me.enAutoPlay) {
+	                $("#autoplay").off("click");
+	                $("#autoplay").html("<i class='fa fa-play'></i> Reproducir");
+	                $("#autoplay").on("click", function() {
+	                  me.autoplay();
+	                })
+	                clearInterval(me.autoPlayInterval);  
+	                me.enAutoPlay = false;
+	              }
+	            }
+
+	            me.limpiarFiltros = function() {
+	              $(".filtros .active").removeClass("active");
+	              me.mostrarPuntosFiltrados();
+	              me.actualizarTextoFiltros();
+	            }
+
+	            me.actualizarTextoFiltros = function() {
+	              var seleccionadas = [];
+	              $("#comisarias-togglers button").each(function() {
+	                if ($(this).hasClass("active")) {
+	                  seleccionadas.push($(this).html());
+	                }
+	              });
+	              var textoComisarias = "";
+                if (seleccionadas.length == 1) {
+                  textoComisarias = " en la jurisdicción de la comisaría " + seleccionadas[0];
+	              } else if (seleccionadas.length == 2) {
+                  textoComisarias = " en la jurisdicción de las comisarías " + seleccionadas.join(" y ");
+                } else if (seleccionadas.length > 2) {
+                  textoComisarias = " en la jurisdicción de las comisarías " + seleccionadas.slice(0,-1).join(", ") + " y " + seleccionadas.slice(-1);
+                }
+	              $("#texto-comisarias").html(textoComisarias);
+	              $("#cantidad-puntos").html(me.cantidadPuntos);
+	              $("#porcentaje").html(Math.floor((me.cantidadPuntos / TOTAL_PUNTOS) * 100));
+	            };
+
+	            me.obtenerFechaPunto = function(d) {
+	              return d3.time.format("%d/%m/%y").parse(d.properties.fecha);
+	            }
+
+	            me.mostrarDistritosFiltrados = function() {
+
+	              me.log("Mostrando distritos filtrados", "info");
+
+	              var distritosSeleccionados = obtenerDistritosSeleccionados();
+	              var rangoFechas = me.brush.extent();
+
+	              var seleccionados = [];
+	              $("#distritos-togglers button").each(function() {
+	                if ($(this).hasClass("active")) {
+	                  seleccionados.push($(this).data("id"));
+	                }
+	              });
+
+	              var selection = d3.selectAll("#svg-distritos path").classed("selected", function (d) {
+	                return !!(seleccionados.indexOf(d.properties.cartodb_id) > -1);
+	              });
+
+	            }
+
+	            me.mostrarComisariasFiltradas = function() {
+	              var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
+	              var rangoFechas = me.brush.extent();
+
+	              var seleccionadas = [];
+	              $("#comisarias-togglers button").each(function() {
+	                if ($(this).hasClass("active")) {
+	                  seleccionadas.push($(this).data("id"));
+	                }
+	              });
+
+	              var selection = d3.selectAll("#svg-comisarias path").classed("selected", function (d) {
+	                return !!(seleccionadas.indexOf(d.properties.cartodb_id) > -1);
+	              });
+
+	            }
+
+	            me.mostrarPuntosFiltrados = function() {
+
+	              me.log("Mostrando puntos", "info");
+
+	              var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
+	              var rangoFechas = me.brush.extent();
+
+	              me.mostrarComisariasFiltradas();
+	              me.mostrarDistritosFiltrados();
+	              
+	              var selection = d3.selectAll("#svg-puntos .circle").classed("selected", function (d) {
+
+	                var fechaPunto = me.obtenerFechaPunto(d);
+	                var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
+	                var enComisaria = false;
+
+	                var nro = d.properties.comisaria.replace("ª", "");
+	                if (comisariasSeleccionadas.length > 0) {
+	                  var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
+	                  if (indiceEnArray > -1) {
+	                    enComisaria = true;
+	                  }
+	                } else {
+	                  enComisaria = true;
+	                }
+
+	                return enFecha && enComisaria;
+	              });
+
+	              me.cantidadPuntos = selection.filter(".selected")[0].length;
+
+	            }
+
+              me.showHeatmap = function(el) {
+                me.map.addLayer(me.heatLayer);
+                me.heatMapIsVisible = true;
+                me.svg.attr("class", "hidden");
+                $(el).html('Ocultar mapa de calor');
+              }
+
+              me.hideHeatmap = function(el) {
+                me.map.removeLayer(me.heatLayer);
+                me.heatMapIsVisible = false;
+                me.svg.attr("class", "visible");
+                $(el).html('Mostrar mapa de calor');
+              }
+
+              me.addDOMListeners = function() {
+
+                $("#limpiar-filtros").on("click", function() {
+                  me.limpiarFiltros();
+                });
+
+                $(".toggle-heatmap").on("click", function() {
+                  if (!!me.heatMapIsVisible) {
+                    me.hideHeatmap(this);
+                  } else {
+                    me.showHeatmap(this);
+                  }
+                });
+
+                $("#cerrar-sidebar").on("click", function () {
+                  me.hideOverlay();
+                });
+
+                $("#distritos-togglers button").on("click", function() {
+
+                  me.stop();
+
+                  var seleccionados = [];
+                  if($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                  } else {
+                    $(this).addClass("active");
+                  }
+
+                  $("#distritos-togglers button").each(function() {
+                    if ($(this).hasClass("active")) {
+                      seleccionados.push($(this).data("id"));
+                    }
+                  });
+
+                  me.mostrarPuntosFiltrados();
+                  me.actualizarTextoFiltros();
+
+                });
+
+                $("#comisarias-togglers button").on("click", function() {
+
+                  me.stop();
+
+                  var seleccionados = [];
+                  if($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                  } else {
+                    $(this).addClass("active");
+                  }
+
+                  $("#comisarias-togglers button").each(function() {
+                    if ($(this).hasClass("active")) {
+                      seleccionados.push($(this).data("id"));
+                    }
+                  });
+
+                  me.mostrarPuntosFiltrados();
+                  me.actualizarTextoFiltros();
+
+                });
+
+                $(".filters-toggle").on("click", function(e) {
+                  e.preventDefault();
+                  var isHidden = $(this).data("hidden") == "1";
+                  if (isHidden) {
+                    me.showFilters(this);
+                  } else {
+                    me.hideFilters(this);
+                  }
+                });
+
+                $("#autoplay").on("click", function() {
+                  me.autoplay();
+                });
+
+              }
+
+              me.showFilters = function(el) {
+                $(el).find("span").text("Ocultar filtros");
+                $(".bottom-bar-wrapper").removeClass("bottom-bar-hidden");
+                $(el).data("hidden", "0");
+              }
+
+              me.hideFilters = function(el) {
+                console.log($(".bottom-bar-wrapper").offset().top);
+                $(el).find("span").text("Mostrar filtros");
+                $(".bottom-bar-wrapper").addClass("bottom-bar-hidden");
+                $(el).data("hidden", "1");
+              }
+
+              me.loadLayers = function(layers, callback, index) {
+
+                var i = index || 0,
+                    basename = layers[i];
+
+                console.log("Loading layer [" + i + "]: " + basename);
+
+                // Agregar la capa SVG para las comisarías a Leaflet
+                me.layers[basename]['svg'] = d3.select(me.map.getPanes().overlayPane).append("svg").attr("id", "svg-" + basename);
+                me.layers[basename]['g'] = me.layers[basename]['svg'].append("g").attr("class", "leaflet-zoom-hide");
+
+                d3.json(basename + ".json", function(collection) {
+
+                  console.log("Layer " + basename + " loaded.");
+
+                  function projectPoint(x, y) {
+                    var point = me.map.latLngToLayerPoint(new L.LatLng(y, x));
+                    this.stream.point(point.x, point.y);
+                  }
+                  var transform = d3.geo.transform({point: projectPoint});
+                  
+                  me.layers[basename]['collection'] = collection;
+                  me.layers[basename]['path'] = d3.geo.path().projection(transform);
+
+                  // Obtener los puntos y asignar una clase
+                  me.layers[basename]['features'] = me.layers[basename]['g'].selectAll("path")
+                    .data(collection.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "area-" + basename);
+
+                  i++;
+
+                  if (i < layers.length) {
+                    me.loadLayers(layers, callback, i);
+                  } else {
+                    me.map.on("viewreset", me.resetCapasSVG);
+                    callback();
+                  }
+
+                });
+
+              };
+
+              me.resetCapasSVG = function() {
+
+                if (me["layers"]["comisarias"]["path"]) {
+                  me.layers['comisarias']['bounds'] = me.layers['comisarias']['path'].bounds(me.layers['comisarias']['collection']);
+
+                  var topLeft = me.layers['comisarias']['bounds'][0],
+                      bottomRight = me.layers['comisarias']['bounds'][1];
+
+                  me.layers['comisarias']['svg'].attr("width", bottomRight[0] - topLeft[0])
+                    .attr("height", bottomRight[1] - topLeft[1])
+                    .style("left", topLeft[0] + "px")
+                    .style("top", topLeft[1] + "px");
+
+                  me.layers['comisarias']['g'].attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+                  me.layers['comisarias']['features'].attr("d", me.layers['comisarias']['path']);
+                }
+
+                // Distritos
+                if (me["layers"]["comisarias"]["path"]) {
+                  me.layers['distritos']['bounds'] = me.layers['distritos']['path'].bounds(me.layers['distritos']['collection']);
+
+                  var topLeftDistritos = me.layers['distritos']['bounds'][0],
+                      bottomRightDistritos = me.layers['distritos']['bounds'][1];
+
+                  me.layers['distritos']['svg'].attr("width", bottomRightDistritos[0] - topLeftDistritos[0])
+                    .attr("height", bottomRightDistritos[1] - topLeftDistritos[1])
+                    .style("left", topLeftDistritos[0] + "px")
+                    .style("top", topLeftDistritos[1] + "px");
+
+                  me.layers['distritos']['g'].attr("transform", "translate(" + -topLeftDistritos[0] + "," + -topLeftDistritos[1] + ")");
+
+                  me.layers['distritos']['features'].attr("d", me.layers['distritos']['path']);
+                }
+
+
+                if (me.pathPuntos) {
+
+                  me.boundsPuntos = me.pathPuntos.bounds(me.collectionPuntos);
+                  var topLeft = me.boundsPuntos[0],
+                      bottomRight = me.layers['comisarias']['bounds'][1];
+
+                  me.svg.attr("width", bottomRight[0] - topLeft[0])
+                    .attr("height", bottomRight[1] - topLeft[1])
+                    .style("left", topLeft[0] + "px")
+                    .style("top", topLeft[1] + "px");
+
+                  g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+                  me.featurePuntos.attr("d", me.pathPuntos);
+                }
+
+              }
+
+              me.appendSVGFilters = function(svg) {
+
+                // filters go in defs element
+                var defs = svg.append("defs");
+
+                // create filter with id #drop-shadow
+                // height=130% so that the shadow is not clipped
+                var filter = defs.append("filter")
+                    .attr("id", "drop-shadow")
+                    .attr("height", "130%");
+
+                // SourceAlpha refers to opacity of graphic that this filter will be applied to
+                // convolve that with a Gaussian with standard deviation 3 and store result
+                // in blur
+                filter.append("feGaussianBlur")
+                    .attr("in", "SourceAlpha")
+                    .attr("stdDeviation", 5)
+                    .attr("result", "blur");
+
+                // translate output of Gaussian blur to the right and downwards with 2px
+                // store result in offsetBlur
+                filter.append("feOffset")
+                    .attr("in", "blur")
+                    .attr("dx", 5)
+                    .attr("dy", 5)
+                    .attr("result", "offsetBlur");
+
+                filter.append("feColorMatrix")
+                  .attr("result");
+
+                    //<feColorMatrix result="matrixOut" in="offOut" type="matrix"
+                    //values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" />
+                // overlay original SourceGraphic over translated blurred opacity by using
+                // feMerge filter. Order of specifying inputs is important!
+                var feMerge = filter.append("feMerge");
+
+                feMerge.append("feMergeNode")
+                    .attr("in", "offsetBlur")
+                feMerge.append("feMergeNode")
+                    .attr("in", "SourceGraphic");
+
+              }
+
+              me.addClickListener = function() {
+                                  // Listener para el click en un punto del mapa
+                  me.featurePuntos.on("click", function (d, i) {
+                    L.DomEvent.stopPropagation(d3.event);
+
+                    var data = {
+                        fecha: d.properties.fecha,
+                        direccion: d.properties.direccion,
+                        victimas: d.properties.victimas,
+                        resumen: d.properties.resumen,
+                        comisaria: d.properties.comisaria,
+                        link: d.properties.link
+                    };
+                    document.getElementById('sidebar-padder').innerHTML = _.template(me.sideBarTemplate, data);
+
+                    $(".circle.active").each(function(e) {
+                      // no addClass or removeClass for SVG with jQuery
+                      var newClass = $(this).attr("class").replace(/active/, "");
+                      $(this).attr("class", newClass);
+                    });
+
+                    $("#point-" + d.properties.cartodb_id).attr("class", "circle selected active");
+
+                    var coords = d.geometry.coordinates;
+                    me.map.setView([ coords[1], coords[0] ], me.map.getZoom(), {animation: true});
+                    me.showOverlay();
+                    $("#sidebar").fadeIn();
+                  });
+
+              }
+
+              me.agregarCapaPuntos = function() {
+                // Agregar la capa SVG para los puntos a Leaflet
+                me.svg = d3.select(me.map.getPanes().overlayPane).append("svg").attr("id", "svg-puntos"),
+                    g = me.svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+                d3.json("homicidios.json", function(collection) {
+
+                  var transform = d3.geo.transform({point: projectPoint});
+
+                  var heatData = [];
+                  collection.features.map(function(item) {
+                    heatData.push([ item.geometry.coordinates[1], item.geometry.coordinates[0], 5 ]);
+                  });
+
+                  me.heatLayer = L.heatLayer(heatData,{
+                      radius: 25,
+                      blur: 12, 
+                      maxZoom: 17,
+                  });
+
+                  function calculatePointRadius(zoomLevel) {
+                    if (zoomLevel < 10) {
+                      return 4;
+                    } else {
+                      return (zoomLevel - 10) * 2.5;
+                    }
+                  }
+                      
+                  me.collectionPuntos = collection;
+                  me.pathPuntos = d3.geo.path().projection(transform).pointRadius(function (d) { 
+                    return calculatePointRadius(me.map.getZoom());
+                  });
+
+                  if (true) {
+                    // Obtener los puntos y asignar una clase
+                    me.featurePuntos = g.selectAll("#svg-puntos .circle")
+                      .data(collection.features)
+                      .enter()
+                      .append("g")
+                      .append("path")
+                      .attr("class", "circle")
+                      .attr("id", function(d) {
+                        return "point-" + d.properties.cartodb_id;
+                      });
+
+                    me.addClickListener();
+                  } else {
+
+                    me.featurePuntos = g.selectAll("#svg-puntos .circle")
+                      .data(collection.features)
+                      .enter()
+                      .append("svg:image")
+                      .attr("xlink:href", "images/grave.png")
+                      .attr("width", "20")
+                      .attr("height", "20")
+                      .attr("class", "circle")
+                      .attr("id", function(d) {
+                        return "point-" + d.properties.cartodb_id;
+                      });
+
+                    me.addClickListener();
+
+                  }
+                  
+                  // Use Leaflet to implement a D3 geometric transformation.
+                  function projectPoint(x, y) {
+                    var point = me.map.latLngToLayerPoint(new L.LatLng(y, x));
+                    this.stream.point(point.x, point.y);
+                  }
+
+                  var chart = me.timeSeriesChart()
+                    .x(me.obtenerFechaPunto).xLabel("Fecha")
+                    .y(get_quantity).yLabel("Casos")
+                    .brushmove(on_brush);
+                  d3.select("#timeline").datum(collection.features).call(chart);
+
+                  function on_brush(brush) {
+                    me.stop();
+                    if (brush) {
+                      me.brush = brush;
+                    }
+                    var s = me.brush.extent();
+                    $("#filtros-fechadesde").html(moment(s[0]).format("D [de] MMMM"));
+                    $("#filtros-fechahasta").html(moment(s[1]).format("D [de] MMMM"));
+                    
+                    me.mostrarPuntosFiltrados();
+                    me.actualizarTextoFiltros();
+
+                  }
+
+                  function get_quantity(d) {
+                    return 69; // Tamaño de la barra en la línea de tiempo, arbitrario, en realidad acá podriamos contar la cantidad de casos en una fecha
+                  }
+
+                  me.resetCapasSVG();
+
+                });
+
+              }
+
+              me.hideOverlay = function() {
+                $("#overlay").removeClass("active");
+                $(".bottom-bar-wrapper").removeClass("hidden");
+                //$("#map-wrapper").removeClass("blurred");
+              }
+
+              me.showOverlay = function() {
+                $("#overlay").addClass("active");
+                $(".bottom-bar-wrapper").addClass("hidden");
+                //$("#map-wrapper").addClass("blurred");
+              }
+
+              me.timeSeriesChart = function() {
+
+                var width = 400, height = 65;
+
+                var x = d3.time.scale()
+                      .domain([me.startDate, me.endDate])
+                      .range([0, width]),
+                    y = d3.scale.linear(),
+                    x_label = "X", y_label = "Y";
+
+                me.brush = d3.svg.brush()
+                    .x(x)
+                    .extent([me.startDate, me.endDate])
+                    .on("brush", _brushmove);
+
+                me.mostrarPuntosFiltrados();
+                me.actualizarTextoFiltros();
+
+                var get_x = no_op,
+                    get_y = no_op;
+
+                function translateMonth() {
+
+                }
+
+                function timeseries(selection) {
+                    selection.each(function (d) {
+                        x.range([0, width]);
+                        y.range([height, 0]);
+
+                        var series = d3.select(this).append("svg").attr("id", "mapa-timeseries")
+                                .attr("width", width)
+                                .attr("height", height)
+                                .append("g").attr("id", "date-brush")
+
+                        var x_axis = series.append("g")
+                          .attr("class", "x axis")
+                          .attr("transform", "translate(0," + height / 2 + ")")
+                          .style("stroke", "#eee");
+
+                        var y_axis = series.append("g")
+                          .attr("class", "y axis");
+
+                        series.append("clipPath")
+                          .attr("id", "clip")
+                          .append("rect")
+                          .attr("width", width - 1)
+                          .attr("height", height - .25)
+                          .attr("transform", "translate(1,0)");
+
+                        series.append("g")
+                          .attr("class", "brush")
+                          .call(me.brush)
+                          .selectAll("rect")
+                          .attr("height", height)
+                          .style("fill", '#ccc')
+                          .attr("opacity", 0.6);
+
+                        x.domain(d3.extent(d, get_x));
+                        x_axis.call(d3.svg.axis().tickFormat(function(d) {
+                          return moment(d).format("MMM"); 
+                        }).scale(x).orient("bottom"));
+
+                        y.domain(d3.extent(d, get_y));
+                        y_axis.call(d3.svg.axis().scale(y).orient("left"));
+
+                        series.append("g").attr("class", "timeseries")
+                            .attr("clip-path", "url(#clip)")
+                            .selectAll("rect")
+                            .data(d).enter()
+                            .append("rect") // Deberían ser barras, más altas si hay más de un caso en ese día... veremos.
+                            .style("stroke", '#0022aa')
+                            .style("stroke-width", .5)
+                            .style("fill", '#0077dd')
+                            .attr("opacity", .8)
+                            .attr("width", 3)
+                            .attr("height", 10)
+                            .attr("transform", function (d) {
+                                return "translate(" + x(get_x(d)) + "," + ((height / 2) - 5) + ")";
+                            });
+                    });
+                }
+
+                timeseries.x = function (accessor) {
+                    if (!arguments.length) return get_x;
+                    get_x = accessor;
+                    return timeseries;
+                };
+
+                timeseries.y = function (accessor) {
+                    if (!arguments.length) return get_y;
+                    get_y = accessor;
+                    return timeseries;
+                };
+
+                timeseries.xLabel = function (label) {
+                    if (!arguments.length) return x_label;
+                    x_label = label;
+                    return timeseries;
+                }
+
+                timeseries.yLabel = function (label) {
+                    if (!arguments.length) return y_label;
+                    y_label = label;
+                    return timeseries;
+                }
+
+                timeseries.brushmove = function (cb) {
+                    if (!arguments.length) return brushmove;
+                    brushmove = cb;
+                    return timeseries;
+                };
+
+                function _brushmove() {
+                    brushmove.call(null, me.brush);
+                }
+
+                function no_op() {}
+
+                return timeseries;
+            
+              }
+
+            } // FIN DEL OBJETO///////////////////
+
             var d3map = {};
             var TOTAL_PUNTOS = 214; //hardcodeado por ahora
             var DEBUG_LEVEL = false;
 
-            d3map.brush = null;
-            d3map.cantidadPuntos = 0;
-            d3map.fechaInicio = new Date(2013, 0, 1, 0, 0, 0, 0);
-            d3map.fechaFin = new Date(2013, 11, 31, 23, 59, 59, 0);
-            d3map.cursorAutoPlay = moment(d3map.fechaInicio).add('days', 1).toDate();
-            d3map.enAutoPlay = false;
-            d3map.layers = {
-              "comisarias": [],
-              "distritos": []
-            };
-
-            d3map.log = function(msg, debugLevel) {
-              var debugLevelValue = {
-                "info": 1,
-                "warning": 2,
-                "all": 3
-              }
-              if (debugLevelValue[DEBUG_LEVEL] >= debugLevelValue[debugLevel]) {
-                console.log(msg);
-              }
-            }
-
-            d3map.autoplay = function() {
-
-              d3map.limpiarFiltros();
-              d3map.enAutoPlay = true;
-
-              d3map.cursorAutoPlay = d3map.fechaInicio;
-
-              $("#autoplay").off("click");
-              $("#autoplay").html("<i class='fa fa-stop'></i> Detener");
-              $("#autoplay").on("click", function() {
-                d3map.stop();
-              })
-
-              d3map.autoPlayInterval = setInterval(
-                function() {
-                  d3map.cursorAutoPlay = moment(d3map.cursorAutoPlay).add('days', 1).toDate();
-
-                  if (d3map.cursorAutoPlay > d3map.fechaFin) {
-                    d3map.stop();
-                    return;
-                  }
-
-                  d3map.brush.extent([d3map.fechaInicio, d3map.cursorAutoPlay]);
-                  d3.select('.brush').call(d3map.brush);
-                  d3map.mostrarPuntosFiltrados();
-                  d3map.actualizarTextoFiltros();
-                  var s = d3map.brush.extent();
-                  $("#filtros-fechadesde").html(moment(s[0]).format("D [de] MMMM"));
-                  $("#filtros-fechahasta").html(moment(s[1]).format("D [de] MMMM"));
-
-                }
-                , 25
-              );
-            }
-
-            d3map.stop = function() {
-              if (d3map.enAutoPlay) {
-                $("#autoplay").off("click");
-                $("#autoplay").html("<i class='fa fa-play'></i> Reproducir");
-                $("#autoplay").on("click", function() {
-                  d3map.autoplay();
-                })
-                clearInterval(d3map.autoPlayInterval);  
-                d3map.enAutoPlay = false;
-              }
-            }
-
-            d3map.limpiarFiltros = function() {
-              $(".filtros .active").removeClass("active");
-              d3map.mostrarPuntosFiltrados();
-              d3map.actualizarTextoFiltros();
-            }
-
-            d3map.actualizarTextoFiltros = function() {
-              var seleccionadas = [];
-              $("#comisarias-togglers button").each(function() {
-                if ($(this).hasClass("active")) {
-                  seleccionadas.push($(this).html());
-                }
-              });
-              var spanComisarias = $("<span/>");
-              spanComisarias.attr("id", "filtro-comisarias")
-              if (seleccionadas.length > 0) {
-                spanComisarias.html(seleccionadas.join(", "));
-              }
-              $("#filtro-comisarias").remove(); 
-              $("#textoFiltros").append(spanComisarias);
-              $("#cantidad-puntos").html(d3map.cantidadPuntos);
-              $("#porcentaje").html(Math.floor((d3map.cantidadPuntos / TOTAL_PUNTOS) * 100));
-            };
-
-            d3map.obtenerFechaPunto = function(d) {
-              return d3.time.format("%d/%m/%y").parse(d.properties.fecha);
-            }
-
-            d3map.mostrarDistritosFiltrados = function() {
-
-              d3map.log("Mostrando distritos filtrados", "info");
-
-              var distritosSeleccionados = obtenerDistritosSeleccionados();
-              var rangoFechas = d3map.brush.extent();
-
-              var seleccionados = [];
-              $("#distritos-togglers button").each(function() {
-                if ($(this).hasClass("active")) {
-                  seleccionados.push($(this).data("id"));
-                }
-              });
-
-              var selection = d3.selectAll("#svg-distritos path").classed("selected", function (d) {
-                return !!(seleccionados.indexOf(d.properties.cartodb_id) > -1);
-              });
-
-            }
-
-            d3map.mostrarComisariasFiltradas = function() {
-              var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
-              var rangoFechas = d3map.brush.extent();
-
-              var seleccionadas = [];
-              $("#comisarias-togglers button").each(function() {
-                if ($(this).hasClass("active")) {
-                  seleccionadas.push($(this).data("id"));
-                }
-              });
-
-              var selection = d3.selectAll("#svg-comisarias path").classed("selected", function (d) {
-                return !!(seleccionadas.indexOf(d.properties.cartodb_id) > -1);
-              });
-
-            }
-
-            d3map.mostrarPuntosFiltrados = function() {
-
-              d3map.log("Mostrando puntos", "info");
-
-              var comisariasSeleccionadas = obtenerComisariasSeleccionadas();
-              var rangoFechas = d3map.brush.extent();
-
-              d3map.mostrarComisariasFiltradas();
-              d3map.mostrarDistritosFiltrados();
-              
-              var selection = d3.selectAll("#svg-puntos path.circle").classed("selected", function (d) {
-
-                var fechaPunto = d3map.obtenerFechaPunto(d);
-                var enFecha = rangoFechas[0] <= fechaPunto && fechaPunto <= rangoFechas[1];
-                var enComisaria = false;
-
-                var nro = d.properties.comisaria.replace("ª", "");
-                if (comisariasSeleccionadas.length > 0) {
-                  var indiceEnArray = comisariasSeleccionadas.indexOf(nro);
-                  if (indiceEnArray > -1) {
-                    enComisaria = true;
-                  }
-                } else {
-                  enComisaria = true;
-                }
-
-                return enFecha && enComisaria;
-              });
-
-              d3map.cantidadPuntos = selection.filter(".selected")[0].length;
-
-            }
+            hm = new homicideMap();
+            hm.init();
 
             function obtenerComisariasSeleccionadas() {
               var seleccionadas = [];
               $("#comisarias-togglers button").each(function() {
                 if ($(this).hasClass("active")) {
-                  seleccionadas.push(nro_comisaria[$(this).data("id")]);
+                  seleccionadas.push(policeStationCode[$(this).data("id")]);
                 }
               });
               return seleccionadas;
@@ -379,402 +993,6 @@
               return seleccionadas;
             }
 
-            function main() {
-
-                var extent, scale, 
-                    classes = 9,
-                    reverse = false;
-                    container = L.DomUtil.get('map');
-
-                var tpl = document.getElementById("sideTemplate").text;
-
-                var map = new L.Map('map', {
-                  zoomControl: false,
-                  center: [-32.9598, -60.6423],
-                  zoom: 13,
-                  zoomAnimation: false
-                });
-
-                L.tileLayer('https://api.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiaGhyb3NhcmlvIiwiYSI6IjY2MjA4ZjNjNDE0OWM3ZWQ2OTNhM2VkZDcwY2UzOTg0In0.zLs4d4FZqurL9p4jUfjm_A').addTo(map);
-
-                /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                    maxZoom: 17
-                }).addTo(map);*/
-
-                $("#distritos-togglers button").on("click", function() {
-
-                  d3map.stop();
-
-                  var seleccionados = [];
-                  if($(this).hasClass("active")) {
-                    $(this).removeClass("active");
-                  } else {
-                    $(this).addClass("active");
-                  }
-
-                  $("#distritos-togglers button").each(function() {
-                    if ($(this).hasClass("active")) {
-                      seleccionados.push($(this).data("id"));
-                    }
-                  });
-
-                  d3map.mostrarPuntosFiltrados();
-                  d3map.actualizarTextoFiltros();
-
-                });
-
-                $("#comisarias-togglers button").on("click", function() {
-
-                  d3map.stop();
-
-                  var seleccionados = [];
-                  if($(this).hasClass("active")) {
-                    $(this).removeClass("active");
-                  } else {
-                    $(this).addClass("active");
-                  }
-
-                  $("#comisarias-togglers button").each(function() {
-                    if ($(this).hasClass("active")) {
-                      seleccionados.push($(this).data("id"));
-                    }
-                  });
-
-                  d3map.mostrarPuntosFiltrados();
-                  d3map.actualizarTextoFiltros();
-
-                });
-
-                function agregarCapaComisarias() {
-                  // Agregar la capa SVG para las comisarías a Leaflet
-                  d3map.layers['comisarias']['svg'] = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-comisarias");
-                  d3map.layers['comisarias']['g'] = d3map.layers['comisarias']['svg'].append("g").attr("class", "leaflet-zoom-hide");
-
-                  d3.json("comisarias.geojson", function(collection) {
-
-                    // Dibuja los puntos sobre el mapa de Leaflet con D3.js
-                    var transform = d3.geo.transform({point: projectPoint});
-                    
-                    d3map.layers['comisarias']['collection'] = collection;
-                    d3map.layers['comisarias']['path'] = d3.geo.path().projection(transform);
-
-                    // Obtener los puntos y asignar una clase
-                    d3map.layers['comisarias']['features'] = d3map.layers['comisarias']['g'].selectAll("path")
-                      .data(collection.features)
-                      .enter()
-                      .append("path")
-                      .attr("class", "area-comisaria");
-
-                    // Use Leaflet to implement a D3 geometric transformation.
-                    function projectPoint(x, y) {
-                      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                      this.stream.point(point.x, point.y);
-                    }
-
-                    map.on("viewreset", resetCapasSVG);
-
-                  });
-                }
-
-                function agregarCapaDistritos() {
-                  // Agregar la capa SVG para las comisarías a Leaflet
-                  d3map.layers['distritos']['svg'] = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-distritos");
-                  d3map.layers['distritos']['g'] = d3map.layers['distritos']['svg'].append("g").attr("class", "leaflet-zoom-hide");
-
-                  d3.json("distritos.json", function(collection) {
-
-                    // Dibuja los puntos sobre el mapa de Leaflet con D3.js
-                    var transform = d3.geo.transform({point: projectPoint});
-                    
-                    d3map.layers['distritos']['collection'] = collection;
-                    d3map.layers['distritos']['path'] = d3.geo.path().projection(transform);
-
-                    // Obtener los puntos y asignar una clase
-                    d3map.layers['distritos']['features'] = d3map.layers['distritos']['g'].selectAll("path")
-                      .data(collection.features)
-                      .enter()
-                      .append("path")
-                      .attr("class", "area-distrito");
-
-                    // Use Leaflet to implement a D3 geometric transformation.
-                    function projectPoint(x, y) {
-                      var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                      this.stream.point(point.x, point.y);
-                    }
-
-                    map.on("viewreset", resetCapasSVG);
-
-                  });
-                }
-
-                agregarCapaComisarias();
-                agregarCapaDistritos();
-
-                // Reposition the SVG to cover the features.
-                function resetCapasSVG() {
-
-                  d3map.layers['comisarias']['bounds'] = d3map.layers['comisarias']['path'].bounds(d3map.layers['comisarias']['collection']);
-
-                  var topLeft = d3map.layers['comisarias']['bounds'][0],
-                      bottomRight = d3map.layers['comisarias']['bounds'][1];
-
-                  d3map.layers['comisarias']['svg'].attr("width", bottomRight[0] - topLeft[0])
-                    .attr("height", bottomRight[1] - topLeft[1])
-                    .style("left", topLeft[0] + "px")
-                    .style("top", topLeft[1] + "px");
-
-                  d3map.layers['comisarias']['g'].attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-                  d3map.layers['comisarias']['features'].attr("d", d3map.layers['comisarias']['path']);
-
-
-                  // Distritos
-
-                  d3map.layers['distritos']['bounds'] = d3map.layers['distritos']['path'].bounds(d3map.layers['distritos']['collection']);
-
-                  var topLeftDistritos = d3map.layers['distritos']['bounds'][0],
-                      bottomRightDistritos = d3map.layers['distritos']['bounds'][1];
-
-                  d3map.layers['distritos']['svg'].attr("width", bottomRightDistritos[0] - topLeftDistritos[0])
-                    .attr("height", bottomRightDistritos[1] - topLeftDistritos[1])
-                    .style("left", topLeftDistritos[0] + "px")
-                    .style("top", topLeftDistritos[1] + "px");
-
-                  d3map.layers['distritos']['g'].attr("transform", "translate(" + -topLeftDistritos[0] + "," + -topLeftDistritos[1] + ")");
-
-                  d3map.layers['distritos']['features'].attr("d", d3map.layers['distritos']['path']);
-
-
-                  if (d3map.pathPuntos) {
-
-                    d3map.boundsPuntos = d3map.pathPuntos.bounds(d3map.collectionPuntos);
-                    var topLeft = d3map.boundsPuntos[0],
-                        bottomRight = d3map.layers['comisarias']['bounds'][1];
-
-                    svg.attr("width", bottomRight[0] - topLeft[0])
-                      .attr("height", bottomRight[1] - topLeft[1])
-                      .style("left", topLeft[0] + "px")
-                      .style("top", topLeft[1] + "px");
-
-                    g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-                    d3map.featurePuntos.attr("d", d3map.pathPuntos);
-                  }
-
-                }
-
-                // Agregar la capa SVG para los puntos a Leaflet
-                var svg = d3.select(map.getPanes().overlayPane).append("svg").attr("id", "svg-puntos"),
-                    g = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-                d3.json("homicidios.json", function(collection) {
-
-                  // Dibuja los puntos sobre el mapa de Leaflet con D3.js
-                  var transform = d3.geo.transform({point: projectPoint});
-                      
-                  d3map.collectionPuntos = collection;
-                  d3map.pathPuntos = d3.geo.path().projection(transform).pointRadius(function (d) { 
-                    console.log(d);
-                    return 10; // TODO: Implementar radio según zoom del mapa
-                  });
-
-                  // Obtener los puntos y asignar una clase
-                  d3map.featurePuntos = g.selectAll("#svg-puntos path.circle")
-                    .data(collection.features)
-                    .enter()
-                    .append("path")
-                    .attr("class", "circle")
-                  
-                  // Listener para el click en un punto del mapa
-                  d3map.featurePuntos.on("click", function (d, i) {
-                    L.DomEvent.stopPropagation(d3.event);
-                    var data = {
-                        fecha: d.properties.fecha,
-                        direccion: d.properties.direccion,
-                        victimas: d.properties.victimas,
-                        resumen: d.properties.resumen,
-                        comisaria: d.properties.comisaria,
-                        link: d.properties.link
-                    };
-                    document.getElementById('sidebar-padder').innerHTML = _.template(tpl, data);
-                    $("#sidebar").fadeIn();
-                  });
-
-                  // Use Leaflet to implement a D3 geometric transformation.
-                  function projectPoint(x, y) {
-                    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-                    this.stream.point(point.x, point.y);
-                  }
-
-                  var chart = timeseries_chart()
-                    .x(d3map.obtenerFechaPunto).xLabel("Fecha")
-                    .y(get_quantity).yLabel("Casos")
-                    .brushmove(on_brush);
-                  d3.select("#timeline").datum(collection.features).call(chart);
-
-                function on_brush(brush) {
-                  d3map.stop();
-                  if (brush) {
-                    d3map.brush = brush;
-                  }
-                  var s = brush.extent();
-                  $("#filtros-fechadesde").html(moment(s[0]).format("D [de] MMMM"));
-                  $("#filtros-fechahasta").html(moment(s[1]).format("D [de] MMMM"));
-                  
-                  d3map.mostrarPuntosFiltrados();
-                  d3map.actualizarTextoFiltros();
-
-                }
-
-                function get_quantity(d) {
-                  return 69; // Tamaño de la barra en la línea de tiempo, arbitrario, en realidad acá podriamos contar la cantidad de casos en una fecha
-                }
-
-              function timeseries_chart() {
-                  var width = 400, height = 65;
-
-                  var x = d3.time.scale()
-                        .domain([d3map.fechaInicio, d3map.fechaFin])
-                        .range([0, width]),
-                      y = d3.scale.linear(),
-                      x_label = "X", y_label = "Y";
-
-                  d3map.brush = d3.svg.brush()
-                      .x(x)
-                      .extent([d3map.fechaInicio, d3map.fechaFin])
-                      .on("brush", _brushmove);
-
-                  d3map.mostrarPuntosFiltrados();
-                  d3map.actualizarTextoFiltros();
-
-                  var get_x = no_op,
-                      get_y = no_op;
-
-                  function translateMonth() {
-
-                  }
-
-                  function timeseries(selection) {
-                      selection.each(function (d) {
-                          x.range([0, width]);
-                          y.range([height, 0]);
-
-                          var series = d3.select(this).append("svg").attr("id", "mapa-timeseries")
-                                  .attr("width", width)
-                                  .attr("height", height)
-                                  .append("g").attr("id", "date-brush")
-
-                          var x_axis = series.append("g")
-                            .attr("class", "x axis")
-                            .attr("transform", "translate(0," + height / 2 + ")")
-                            .style("stroke", "#eee");
-
-                          var y_axis = series.append("g")
-                            .attr("class", "y axis");
-
-                          series.append("clipPath")
-                            .attr("id", "clip")
-                            .append("rect")
-                            .attr("width", width - 1)
-                            .attr("height", height - .25)
-                            .attr("transform", "translate(1,0)");
-
-                          series.append("g")
-                            .attr("class", "brush")
-                            .call(d3map.brush)
-                            .selectAll("rect")
-                            .attr("height", height)
-                            .style("fill", '#ccc')
-                            .attr("opacity", 0.6);
-
-                          x.domain(d3.extent(d, get_x));
-                          x_axis.call(d3.svg.axis().tickFormat(function(d) {
-                            return moment(d).format("MMM"); 
-                          }).scale(x).orient("bottom"));
-
-                          y.domain(d3.extent(d, get_y));
-                          y_axis.call(d3.svg.axis().scale(y).orient("left"));
-
-                          series.append("g").attr("class", "timeseries")
-                              .attr("clip-path", "url(#clip)")
-                              .selectAll("rect")
-                              .data(d).enter()
-                              .append("rect") // Deberían ser barras, más altas si hay más de un caso en ese día... veremos.
-                              .style("stroke", '#0022aa')
-                              .style("stroke-width", .5)
-                              .style("fill", '#0077dd')
-                              .attr("opacity", .8)
-                              .attr("width", 3)
-                              .attr("height", 10)
-                              .attr("transform", function (d) {
-                                  return "translate(" + x(get_x(d)) + "," + ((height / 2) - 5) + ")";
-                              });
-                      });
-                  }
-
-                  timeseries.x = function (accessor) {
-                      if (!arguments.length) return get_x;
-                      get_x = accessor;
-                      return timeseries;
-                  };
-
-                  timeseries.y = function (accessor) {
-                      if (!arguments.length) return get_y;
-                      get_y = accessor;
-                      return timeseries;
-                  };
-
-                  timeseries.xLabel = function (label) {
-                      if (!arguments.length) return x_label;
-                      x_label = label;
-                      return timeseries;
-                  }
-
-                  timeseries.yLabel = function (label) {
-                      if (!arguments.length) return y_label;
-                      y_label = label;
-                      return timeseries;
-                  }
-
-                  timeseries.brushmove = function (cb) {
-                      if (!arguments.length) return brushmove;
-                      brushmove = cb;
-                      return timeseries;
-                  };
-
-                  function _brushmove() {
-                      brushmove.call(null, d3map.brush);
-                  }
-
-                  function no_op() {}
-
-                  return timeseries;
-
-              }
-
-              resetCapasSVG();
-
-              }); // D3.json fin
-
-              $("#cerrar-sidebar").on("click", function () {
-                $("#sidebar").fadeOut();
-              });
-
-              $("#comisarias-togglers").mCustomScrollbar({
-                theme: "dark-thick"
-              });
-
-              $("#autoplay").on("click", function() {
-                d3map.autoplay();
-              });
-
-              $("#limpiar-filtros").on("click", function() {
-                d3map.limpiarFiltros();
-              });
-
-            };
-            window.onload = main;
           </script>
 
 
